@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تفاصيل النادي | PlayPass</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">تخطَّ إلى المحتوى</a>
+<header class="site-header" id="siteHeader"></header>
+<main class="container" id="main"><div class="section" id="wrap"></div></main>
+<footer id="siteFooter"></footer><div id="toasts"></div>
+<script src="js/seed.js"></script><script src="js/store.js"></script><script src="js/app.js"></script>
+<script>
+renderChrome("clubs");
+(function(){
+  const c = DB.club(qs("id"));
+  const box = document.getElementById("wrap");
+  if(!c){ box.innerHTML = '<div class="alert err">النادي غير موجود. <a href="clubs.html">عودة للأندية</a></div>'; return; }
+  document.title = c.name + " | PlayPass";
+  box.innerHTML = `
+    <div class="club-hero">
+      <div class="club-cover" style="background:linear-gradient(135deg,${c.color1},${c.color2})">
+        ${ph(clubImg(c.id, 1400), c.emoji, "ملعب " + c.name)}
+        <div class="ov"></div><span class="flag">${c.flag}</span>
+        <span class="crest">${c.emoji}</span><h1>${esc(c.name)}</h1>
+      </div>
+      <div class="club-info">
+        <div class="meta"><span class="tag">📍 ${esc(c.country)} — ${esc(c.city)}</span><span class="tag green">🏟️ ${esc(c.stadium)}</span><span class="tag">تأسس ${c.founded}</span><span class="tag gold">سعة ${Number(c.capacity).toLocaleString("ar")}</span></div>
+        <p class="lead" style="margin:4px 0">${esc(c.desc)}</p>
+        <h3>🎯 الأنشطة المتاحة للضيوف (${c.activities.length})</h3>
+        <div class="grid activities">${c.activities.map(a=>`<div class="activity-card"><div class="activity-ic">⚽</div><div><b>${esc(a)}</b><br><small style="color:var(--muted)">بإشراف طاقم النادي</small></div></div>`).join("")}</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+          <a class="btn btn-primary" href="request-visit.html?club=${c.id}">📝 تقديم طلب زيارة</a>
+          <a class="btn btn-ghost" href="clubs.html">← كل الأندية</a>
+        </div>
+      </div>
+    </div>`;
+})();
+</script>
+</body>
+</html>

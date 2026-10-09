@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>جدول الزيارة | PlayPass</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">تخطَّ إلى المحتوى</a>
+<header class="site-header" id="siteHeader"></header>
+<main class="container" id="main"><div class="section" id="wrap"></div></main>
+<footer id="siteFooter"></footer><div id="toasts"></div>
+<script src="js/seed.js"></script><script src="js/store.js"></script><script src="js/app.js"></script>
+<script>
+renderChrome("req");
+const s = requireRole(["player"], "login.html");
+(function(){
+  const box = document.getElementById("wrap");
+  if(!s) return;
+  const r = DB.getRequest(qs("request"));
+  if(!r || r.playerId !== s.id){ box.innerHTML = '<div class="alert err">الطلب غير موجود.</div>'; return; }
+  // guard: schedule only after approval
+  if(r.status !== "approved"){
+    box.innerHTML = `<div class="alert err">⛔ لا يمكن عرض الجدول قبل موافقة النادي. حالة طلبك الحالية: ${r.status==="rejected"?"مرفوضة ❌":"قيد المراجعة ⏳"}. <a href="request-details.html?id=${r.id}">عودة للتفاصيل</a></div>`;
+    return;
+  }
+  const c = DB.club(r.clubId) || { name:"—", flag:"" };
+  const slots = DB.scheduleFor(r.id);
+  box.innerHTML = `
+    <div class="section-head"><div><h2>📅 جدول الزيارة — ${c.flag} ${esc(c.name)}</h2><p>الفترة: ${esc(r.start)} ← ${esc(r.end)}</p></div>
+    <button class="btn btn-ghost btn-sm" onclick="window.print()">🖨️ طباعة الجدول</button></div>
+    ${slots.length ? `<div class="timeline">` + slots.map(x=>`
+      <div class="slot"><div class="time">🕘 ${esc(x.time)}</div>
+        <div><b>${esc(x.title)}</b><br><small style="color:var(--muted)">📍 ${esc(x.place)} • ${esc(x.day)}</small></div>
+      </div>`).join("") + `</div>`
+    : `<div class="alert info">تمت الموافقة على طلبك ✅ والجدول التفصيلي قيد الإعداد من النادي — عُد قريباً.</div>`}
+    <div style="margin-top:14px"><a class="btn btn-ghost" href="request-details.html?id=${r.id}">← تفاصيل الطلب</a></div>`;
+})();
+</script>
+</body>
+</html>

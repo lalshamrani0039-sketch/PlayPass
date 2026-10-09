@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسجيل الدخول | PlayPass</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">تخطَّ إلى المحتوى</a>
+<header class="site-header" id="siteHeader"></header>
+<main class="container" id="main">
+  <div class="section">
+    <div class="form-card reveal">
+      <h2 style="margin-top:0">🔐 تسجيل الدخول / إنشاء حساب</h2>
+      <p style="color:var(--muted)">اختر دورك وسجّل الدخول، أو أنشئ حساب لاعب جديد. <b>وضع تجريبي:</b> الحسابات تُحفظ في متصفحك فقط.</p>
+      <div class="tabs" role="tablist">
+        <button class="tab active" id="tabLogin" onclick="showTab('login')">تسجيل الدخول</button>
+        <button class="tab" id="tabReg" onclick="showTab('reg')">حساب لاعب جديد</button>
+      </div>
+      <div id="paneLogin">
+        <div id="loginMsg"></div>
+        <div class="field"><label for="email">البريد الإلكتروني</label><input id="email" type="email" placeholder="player@playpass.sa" autocomplete="username"></div>
+        <div class="field"><label for="pass">كلمة المرور</label><input id="pass" type="password" placeholder="••••••" autocomplete="current-password"></div>
+        <button class="btn btn-primary" style="width:100%" onclick="doLogin()">دخول</button>
+        <div class="alert info" style="margin-top:14px">💡 دخول سريع بحسابات تجريبية:
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+            <button class="btn btn-ghost btn-sm" onclick="quick('player@playpass.sa')">لاعب ⚽</button>
+            <button class="btn btn-ghost btn-sm" onclick="quick('club@playpass.sa')">نادي 🏟️</button>
+            <button class="btn btn-ghost btn-sm" onclick="quick('admin@playpass.sa')">مشرف 📊</button>
+          </div>
+        </div>
+      </div>
+      <div id="paneReg" style="display:none">
+        <div id="regMsg"></div>
+        <div class="field"><label for="rname">الاسم الكامل</label><input id="rname" placeholder="مثال: أحمد الشمري"></div>
+        <div class="field"><label for="remail">البريد الإلكتروني</label><input id="remail" type="email" placeholder="you@mail.com"></div>
+        <div class="field"><label for="rpass">كلمة المرور (6 أحرف فأكثر)</label><input id="rpass" type="password" placeholder="••••••"></div>
+        <div class="field"><label for="rcountry">الدولة</label><input id="rcountry" placeholder="السعودية"></div>
+        <button class="btn btn-accent" style="width:100%" onclick="doRegister()">إنشاء الحساب</button>
+      </div>
+    </div>
+  </div>
+</main>
+<footer id="siteFooter"></footer><div id="toasts"></div>
+<script src="js/seed.js"></script><script src="js/store.js"></script><script src="js/app.js"></script>
+<script>
+renderChrome("home");
+function showTab(t){
+  document.getElementById("paneLogin").style.display = t==="login"?"":"none";
+  document.getElementById("paneReg").style.display = t==="reg"?"":"none";
+  document.getElementById("tabLogin").classList.toggle("active", t==="login");
+  document.getElementById("tabReg").classList.toggle("active", t==="reg");
+}
+function homeFor(role){ return role==="club" ? "club-dashboard.html" : role==="admin" ? "admin-dashboard.html" : "index.html"; }
+function doLogin(){
+  const e = document.getElementById("email").value.trim().toLowerCase();
+  const p = document.getElementById("pass").value;
+  const u = DB.users().find(x=>x.email.toLowerCase()===e && x.pass===p);
+  if(!u){ document.getElementById("loginMsg").innerHTML = '<div class="alert err">بيانات الدخول غير صحيحة. جرّب الدخول السريع بالأسفل.</div>'; return; }
+  login(u); toast("مرحباً " + u.name + " 👋"); setTimeout(()=> location.href = homeFor(u.role), 500);
+}
+function quick(email){
+  const u = DB.users().find(x=>x.email===email);
+  if(u){ login(u); toast("تم الدخول كـ " + u.name); setTimeout(()=> location.href = homeFor(u.role), 500); }
+}
+function doRegister(){
+  const name = document.getElementById("rname").value.trim();
+  const email = document.getElementById("remail").value.trim().toLowerCase();
+  const pass = document.getElementById("rpass").value;
+  const country = document.getElementById("rcountry").value.trim() || "—";
+  const box = document.getElementById("regMsg");
+  if(name.length < 2){ box.innerHTML = '<div class="alert err">فضلاً أدخل الاسم.</div>'; return; }
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ box.innerHTML = '<div class="alert err">البريد الإلكتروني غير صالح.</div>'; return; }
+  if(pass.length < 6){ box.innerHTML = '<div class="alert err">كلمة المرور قصيرة (6 أحرف فأكثر).</div>'; return; }
+  if(DB.users().some(x=>x.email.toLowerCase()===email)){ box.innerHTML = '<div class="alert err">هذا البريد مسجّل مسبقاً — سجّل الدخول.</div>'; return; }
+  const u = DB.addUser({ role:"player", name, email, pass, country });
+  login(u); box.innerHTML = '<div class="alert ok">تم إنشاء حسابك بنجاح 🎉 جارٍ تحويلك...</div>';
+  setTimeout(()=> location.href = "index.html", 800);
+}
+if(session()){ const s = session(); location.href = homeFor(s.role); }
+</script>
+</body>
+</html>
