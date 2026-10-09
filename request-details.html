@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تفاصيل الطلب | PlayPass</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">تخطَّ إلى المحتوى</a>
+<header class="site-header" id="siteHeader"></header>
+<main class="container" id="main"><div class="section" id="wrap"></div></main>
+<footer id="siteFooter"></footer><div id="toasts"></div>
+<script src="js/seed.js"></script><script src="js/store.js"></script><script src="js/app.js"></script>
+<script>
+renderChrome("req");
+const s = requireRole(["player"], "login.html");
+(function(){
+  const r = DB.getRequest(qs("id"));
+  const box = document.getElementById("wrap");
+  if(!s) return;
+  if(!r || r.playerId !== s.id){ box.innerHTML = '<div class="alert err">الطلب غير موجود أو لا تملك صلاحية عرضه.</div>'; return; }
+  const c = DB.club(r.clubId) || { name:"—", flag:"", country:"" };
+  const days = Math.max(1, Math.round((new Date(r.end) - new Date(r.start)) / 864e5) + 1);
+  box.innerHTML = `
+    <div class="panel">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+        <h2 style="margin:0">🧾 تفاصيل الطلب <small style="color:var(--muted)">#${esc(r.id)}</small></h2>${statusLabel(r.status)}
+      </div><hr style="border:0;border-top:1px solid var(--border);margin:14px 0">
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+        <div><small style="color:var(--muted)">النادي المضيف</small><br><b>${c.flag} ${esc(c.name)}</b></div>
+        <div><small style="color:var(--muted)">الدولة</small><br><b>${esc(c.country||"—")}</b></div>
+        <div><small style="color:var(--muted)">مدة الزيارة</small><br><b>📅 ${esc(r.start)} ← ${esc(r.end)} (${days} أيام)</b></div>
+        <div><small style="color:var(--muted)">تاريخ التقديم</small><br><b>${esc(r.createdAt)}</b></div>
+      </div>
+      <h3>🎯 الأنشطة المطلوبة</h3>
+      <div>${r.activities.map(a=>`<span class="tag green" style="margin:2px;display:inline-block">⚽ ${esc(a)}</span>`).join("")}</div>
+      ${r.notes ? `<h3>📝 ملاحظاتك</h3><p style="color:var(--muted)">${esc(r.notes)}</p>` : ""}
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+        ${r.status==="approved"
+          ? `<a class="btn btn-primary" href="schedule.html?request=${r.id}">📅 عرض جدول الزيارة</a>`
+          : r.status==="rejected"
+          ? `<div class="alert err" style="margin:0">نأسف، تم رفض هذا الطلب من النادي المضيف. يمكنك التقديم لنادٍ آخر. ❌</div>`
+          : `<div class="alert info" style="margin:0">طلبك قيد المراجعة ⏳ — سيصلك التحديث هنا فور رد النادي.</div>`}
+        <a class="btn btn-ghost" href="my-requests.html">← طلباتي</a>
+      </div>
+    </div>`;
+})();
+</script>
+</body>
+</html>
