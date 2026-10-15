@@ -127,4 +127,7 @@
       navigator.serviceWorker.register("service-worker.js").catch(function(){});
     });
   }
+  // PWA: offline/online indicator so cached content is never mistaken for fresh
+  window.addEventListener("offline", function(){ toast("📡 انقطع الاتصال — تعرض نسخة محفوظة ⏳"); });
+  window.addEventListener("online", function(){ toast("🌐 عاد الاتصال — المحتوى محدّث ✅"); });
 })();
