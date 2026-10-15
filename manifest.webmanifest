@@ -1,0 +1,15 @@
+{
+  "name": "PlayPass — السياحة الرياضية",
+  "short_name": "PlayPass",
+  "description": "تدرّب مع أندية العالم: استعرض الأندية، قدّم طلب زيارة، وتابع جدولك التدريبي.",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#0a1a33",
+  "theme_color": "#0a1a33",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
