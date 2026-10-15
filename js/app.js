@@ -120,4 +120,14 @@
     document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
   }
   window.renderChrome = renderChrome;
+
+  // PWA: register service worker (additive; guarded — file:// and old browsers skip silently)
+  if ("serviceWorker" in navigator && /^(https:|http:\/\/localhost|http:\/\/127\.0\.0\.1)/.test(location.protocol + "//" + location.hostname)) {
+    window.addEventListener("load", function(){
+      navigator.serviceWorker.register("service-worker.js").catch(function(){});
+    });
+  }
+  // PWA: offline/online indicator so cached content is never mistaken for fresh
+  window.addEventListener("offline", function(){ toast("📡 انقطع الاتصال — تعرض نسخة محفوظة ⏳"); });
+  window.addEventListener("online", function(){ toast("🌐 عاد الاتصال — المحتوى محدّث ✅"); });
 })();
