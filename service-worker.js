@@ -4,15 +4,18 @@
    - Cross-origin (images/fonts): network-first with cache fallback;
      pages already hide failed images behind designed gradients.
    Bump CACHE to force-refresh all clients. */
-const CACHE = "playpass-v2";
+const CACHE = "playpass-v3";
 const CORE = [
   "./",
   "index.html",
+  "about.html",
   "offline.html",
   "manifest.webmanifest",
   "icon.svg",
   "icons/icon-192.png",
   "icons/icon-512.png",
+  "icons/maskable-512.png",
+  "icons/apple-touch-icon.png",
   "css/style.css",
   "js/seed.js",
   "js/store.js",
