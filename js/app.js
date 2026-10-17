@@ -1,4 +1,4 @@
-  window.renderChrome = renderChrome;
+   window.renderChrome = renderChrome;
 
   // PWA: custom install button (shown when browser offers installation)
   let deferredPrompt = null;
