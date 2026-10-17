@@ -76,6 +76,7 @@
   const NAV = [
     { href:"index.html", label:"🏠 الرئيسية", key:"home" },
     { href:"clubs.html", label:"🏟️ الأندية", key:"clubs" },
+    { href:"about.html", label:"ℹ️ من نحن", key:"about" },
     { href:"my-requests.html", label:"📋 طلباتي", key:"req", player:true },
     { href:"club-dashboard.html", label:"🛠️ لوحة النادي", key:"club", club:true },
     { href:"admin-dashboard.html", label:"📊 لوحة المشرف", key:"admin", admin:true },
