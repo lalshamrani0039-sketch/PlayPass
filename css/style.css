@@ -308,7 +308,17 @@ footer b{color:#fff}
 footer code{background:rgba(255,255,255,.12);padding:1px 7px;border-radius:6px;color:#fff;font-size:.82rem}
 .foot-grid{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;align-items:flex-start}
 
-/* ---------- Toast ---------- */
+.pwa-install-btn {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1000;
+  border-radius: 12px !important;
+  box-shadow: var(--shadow);
+}
+[data-theme="dark"] .pwa-install-btn {
+  box-shadow: var(--shadow);
+}
 #toasts{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:grid;gap:8px;z-index:100;width:min(430px,92vw)}
 .toast{background:var(--navy);color:#fff;padding:13px 19px;border-radius:13px;font-weight:800;box-shadow:0 14px 34px rgba(0,0,0,.3);animation:up .25s ease;border-inline-start:4px solid var(--green)}
 [data-theme="dark"] .toast{background:#14273f}
