@@ -1,4 +1,4 @@
-/* PlayPass service worker — clean version */
+/* PlayPass service worker — robust version */
 const CACHE = "playpass-v4";
 const CORE = [
   "./",
@@ -19,9 +19,12 @@ const CORE = [
 
 self.addEventListener("install", (e) => {
   e.waitUntil(
-    caches.open(CACHE)
-      .then((c) => c.addAll(CORE))
-      .then(() => self.skipWaiting())
+    caches.open(CACHE).then((c) => {
+      const promises = CORE.map((url) =>
+        fetch(url).then((res) => c.put(url, res.clone())).catch(() => {})
+      );
+      return Promise.allSettled(promises).then(() => self.skipWaiting());
+    })
   );
 });
 
@@ -37,7 +40,6 @@ self.addEventListener("fetch", (e) => {
   const req = e.request;
   if (req.method !== "GET") return;
   
-  // network-first للصفحات HTML (دائماً contenu حديث)
   if (req.mode === "navigate") {
     e.respondWith(
       fetch(req)
@@ -51,7 +53,6 @@ self.addEventListener("fetch", (e) => {
     return;
   }
   
-  // cache-first للأصول الثابتة (CSS/JS/صور)
   e.respondWith(
     caches.match(req).then(m => m || fetch(req))
   );
