@@ -29,6 +29,7 @@
         <div class="alert info" style="margin-top:14px">💡 دخول سريع بحسابات تجريبية:
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
             <button class="btn btn-ghost btn-sm" onclick="quick('player@playpass.sa')">لاعب ⚽</button>
+            <button class="btn btn-ghost btn-sm" onclick="quick('visitor@playpass.sa')">زائر 🎟️</button>
             <button class="btn btn-ghost btn-sm" onclick="quick('club@playpass.sa')">نادي 🏟️</button>
             <button class="btn btn-ghost btn-sm" onclick="quick('admin@playpass.sa')">مشرف 📊</button>
           </div>
@@ -40,6 +41,7 @@
         <div class="field"><label for="remail">البريد الإلكتروني</label><input id="remail" type="email" placeholder="you@mail.com"></div>
         <div class="field"><label for="rpass">كلمة المرور (6 أحرف فأكثر)</label><input id="rpass" type="password" placeholder="••••••"></div>
         <div class="field"><label for="rcountry">الدولة</label><input id="rcountry" placeholder="السعودية"></div>
+        <div class="field"><label for="rrole">نوع الحساب</label><select id="rrole"><option value="player">لاعب ⚽</option><option value="visitor">زائر عادي 🎟️</option></select></div>
         <button class="btn btn-accent" style="width:100%" onclick="doRegister()">إنشاء الحساب</button>
       </div>
     </div>
@@ -77,7 +79,8 @@ function doRegister(){
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ box.innerHTML = '<div class="alert err">البريد الإلكتروني غير صالح.</div>'; return; }
   if(pass.length < 6){ box.innerHTML = '<div class="alert err">كلمة المرور قصيرة (6 أحرف فأكثر).</div>'; return; }
   if(DB.users().some(x=>x.email.toLowerCase()===email)){ box.innerHTML = '<div class="alert err">هذا البريد مسجّل مسبقاً — سجّل الدخول.</div>'; return; }
-  const u = DB.addUser({ role:"player", name, email, pass, country });
+  const role = document.getElementById("rrole").value;
+  const u = DB.addUser({ role, name, email, pass, country });
   login(u); box.innerHTML = '<div class="alert ok">تم إنشاء حسابك بنجاح 🎉 جارٍ تحويلك...</div>';
   setTimeout(()=> location.href = "index.html", 800);
 }
