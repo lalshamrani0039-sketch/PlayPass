@@ -2,7 +2,7 @@
    حالياً: محاكاة قاعدة بيانات عبر localStorage (وضع تجريبي موثّق).
    للربط الخلفي: استبدل دوال DB.* بنداءات fetch إلى /api/... دون تغيير باقي الكود. */
 (function(){
-  const KEY = "playpass_db_v1";
+  const KEY = "playpass_db_v2";
   const uid = (p)=> p + "-" + Math.random().toString(36).slice(2,7) + Date.now().toString(36).slice(-3);
 
   function init(){
