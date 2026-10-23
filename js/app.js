@@ -46,9 +46,14 @@
     hideInstallButton();
   });
 
+window.homeFor = function(role){
+  if(role==="club") return "club-dashboard.html";
+  if(role==="admin") return "admin-dashboard.html";
+  return "index.html";
+};
+
   // إخفاء الزر إذا كان التطبيق يعمل بالفعل كتطبيق مثبت
   if (navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
     hideInstallButton();
-  }
 
   // PWA: register service worker (additive; guarded — file:// and old browsers skip silently)
