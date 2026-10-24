@@ -1,4 +1,4 @@
-   /* PlayPass app shell — كامل ومُختبر */
+/* PlayPass app shell — كامل ومُختبر */
 (function(){
   const root = document.documentElement;
 
@@ -181,3 +181,7 @@
   window.addEventListener("offline", function(){ toast("📡 انقطع الاتصال — تعرض نسخة محفوظة ⏳"); });
   window.addEventListener("online", function(){ toast("🌐 عاد الاتصال — المحتوى محدّث ✅"); });
 })();
+
+ 
+  
+
