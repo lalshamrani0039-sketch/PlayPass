@@ -111,7 +111,7 @@ function doRegister(){
   const email = document.getElementById("remail").value.trim().toLowerCase();
   const pass = document.getElementById("rpass").value;
   const pass2 = document.getElementById("rpass2").value;
-  const country = document.getElementById("rcountry").value.trim() || "—";
+  const country = document.getElementById("rcountry") ? document.getElementById("rcountry").value.trim() : "—";
   const dob = document.getElementById("rdob").value;
   const idType = document.getElementById("rtype").value;
   const idNumber = document.getElementById("rid").value.trim();
@@ -160,3 +160,4 @@ if(DB.getCurrentUser()){
 </script>
 </body>
 </html>
+ 
