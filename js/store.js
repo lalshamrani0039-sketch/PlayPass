@@ -1,109 +1,184 @@
-/* PlayPass app shell */
+/* PlayPass store — قاعدة بيانات محلية باستخدام localStorage */
 (function(){
-  const root = document.documentElement;
+  const USERS_KEY = "playpass_users_v2";
+  const CLUBS_KEY = "playpass_clubs_v2";
+  const REQUESTS_KEY = "playpass_requests_v2";
+  const SCHEDULES_KEY = "playpass_schedules_v2";
+  const CURRENT_USER_KEY = "playpass_current_user_v2";
 
-  function theme(){ return localStorage.getItem("playpass_theme") || "light"; }
-  function applyTheme(t){ root.setAttribute("data-theme", t); const b=document.getElementById("themeBtn"); if(b) b.textContent = t==="dark" ? "☀️" : "🌙"; }
-  window.toggleTheme = function(){ const n = theme()==="dark"?"light":"dark"; localStorage.setItem("playpass_theme", n); applyTheme(n); };
+  const uid = (p)=> p + "-" + Math.random().toString(36).slice(2,9) + Date.now().toString(36).slice(-3);
 
-  const SCALES = ["font-sm","","font-lg","font-xl"];
-  function fontStep(){ return parseInt(localStorage.getItem("playpass_fontstep")||"1",10); }
-  function applyFont(){
-    root.classList.remove("font-sm","font-lg","font-xl");
-    const c = SCALES[fontStep()] || "";
-    if(c) root.classList.add(c);
+  function load(key, def){
+    try{ return JSON.parse(localStorage.getItem(key)) || def; }catch(e){ return def; }
   }
-  window.fontBigger = function(){ let s=Math.min(3,fontStep()+1); localStorage.setItem("playpass_fontstep",s); applyFont(); };
-  window.fontSmaller = function(){ let s=Math.max(0,fontStep()-1); localStorage.setItem("playpass_fontstep",s); applyFont(); };
+  function save(key, data){
+    try{ localStorage.setItem(key, JSON.stringify(data)); }catch(e){}
+  }
 
-  window.session = function(){ return DB.getCurrentUser(); };
-  window.login = function(email, pass){ return DB.login(email, pass); };
-  window.logout = function(){ DB.logout(); location.href = "login.html"; };
-  window.requireRole = function(roles, redirect){
-    const s = DB.getCurrentUser();
-    if(!s || !roles.includes(s.role)){ if(redirect) location.href = redirect; return null; }
-    return s;
-  };
-  window.getCurrentUser = function(){ return DB.getCurrentUser(); };
-  window.homeFor = function(role){ if(role==="club") return "club-dashboard.html"; if(role==="admin") return "admin-dashboard.html"; return "index.html"; };
-
-  window.esc = function(s){ return String(s==null?"":s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m])); };
-  window.toast = function(msg){
-    const box = document.getElementById("toasts"); if(!box) return alert(msg);
-    const d = document.createElement("div"); d.className="toast"; d.textContent = msg;
-    box.appendChild(d); setTimeout(()=>d.remove(), 2600);
-  };
-  window.statusLabel = function(st){
-    if(st==="approved") return '<span class="status approved">✅ تمت الموافقة</span>';
-    if(st==="rejected") return '<span class="status rejected">❌ مرفوضة</span>';
-    return '<span class="status pending">⏳ قيد المراجعة</span>';
-  };
-  window.qs = function(k){ return new URLSearchParams(location.search).get(k); };
-
-  window.HERO_IMG = "https://images.unsplash.com/photo-1522778119026-d647f0596c20";
-  window.CLUB_IMGS = {
-    "c-hilal": "https://images.unsplash.com/photo-1574629810360-7efbbe195018",
-    "c-barca": "https://images.unsplash.com/photo-1522778119026-d647f0596c20",
-    "c-bayern": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2",
-    "c-ahly": "https://images.unsplash.com/photo-1529900748604-07564a03e7a6",
-    "c-ajax": "https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9",
-    "c-sao": "https://images.unsplash.com/photo-1517466787929-bc90951d0974",
-    "c-tokyo": "https://images.unsplash.com/photo-1579952363873-27f3bade9f55",
-    "c-sydney": "https://images.unsplash.com/photo-1526232761682-d26e03ac148e",
-    "c-raja": "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d",
-    "c-galatasaray": "https://images.unsplash.com/photo-1526527178577-63749737865e"
-  };
-  window.uimg = function(base, w){ return base + "?q=80&w=" + (w||1200) + "&auto=format&fit=crop"; };
-  window.clubImg = function(id, w){ return window.uimg(window.CLUB_IMGS[id] || window.HERO_IMG, w); };
-  window.ph = function(src, emoji, alt){
-    return '<span class="ph-em" aria-hidden="true">' + (emoji||"🏟️") + '</span>'
-      + '<img src="' + src + '" alt="' + esc(alt||"") + '" loading="lazy" onerror="this.remove()">';
-  };
-
-  const NAV = [
-    { href:"index.html", label:"🏠 الرئيسية", key:"home" },
-    { href:"clubs.html", label:"🏟️ الأندية", key:"clubs" },
-    { href:"about.html", label:"ℹ️ من نحن", key:"about" },
-    { href:"my-requests.html", label:"📋 طلباتي", key:"req" },
-    { href:"club-dashboard.html", label:"🛠️ لوحة النادي", key:"club" },
-    { href:"admin-dashboard.html", label:"📊 لوحة المشرف", key:"admin" },
+  const defaultUsers = [
+    { id:"u-player", role:"player", name:"أحمد الشمري", email:"player@playpass.sa", pass:"123456", country:"السعودية", idType:"national", idNumber:"1234567890", dob:"1995-05-15", photo:"" },
+    { id:"u-visitor", role:"visitor", name:"زائر تجريبي", email:"visitor@playpass.sa", pass:"123456", country:"مصر", idType:"passport", idNumber:"A1234567", dob:"1990-01-01", photo:"" },
+    { id:"u-club", role:"club", name:"نادي الهلال", email:"club@playpass.sa", pass:"123456", clubId:"c-hilal", country:"السعودية" },
+    { id:"u-admin", role:"admin", name:"مشرف الاتحاد", email:"admin@playpass.sa", pass:"123456", country:"السعودية" }
   ];
-  function renderChrome(active){
-    const s = DB.getCurrentUser();
-    const header = document.getElementById("siteHeader");
-    if(header){
-      const links = NAV.filter(n=>{
-        if(n.key==="club" && !(s && s.role==="club")) return false;
-        if(n.key==="admin" && !(s && s.role==="admin")) return false;
-        return true;
-      }).map(n=>`<a href="${n.href}" class="${active===n.key?'active':''}">${n.label}</a>`).join("");
-      const authArea = s
-        ? `<span class="tag green">👤 ${esc(s.name)}</span><button class="btn btn-ghost btn-sm" onclick="logout()">خروج</button>`
-        : `<a class="btn btn-primary btn-sm" href="login.html">تسجيل الدخول / حساب جديد</a>`;
-      header.innerHTML = `
-        <div class="container header-inner">
-          <a class="brand" href="index.html" aria-label="PlayPass الرئيسية"><span class="brand-mark">⚽</span><span class="wordmark">Play<b>Pass</b><small>السياحة الرياضية للاعبين</small></span></a>
-          <nav class="nav" id="mainNav" aria-label="التنقل الرئيسي">${links}</nav>
-          <div class="header-actions">
-            <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" title="الوضع الليلي/النهاري" aria-label="تبديل المظهر">🌙</button>
-            <button class="icon-btn" onclick="fontBigger()" title="تكبير الخط" aria-label="تكبير الخط">A+</button>
-            <button class="icon-btn" onclick="fontSmaller()" title="تصغير الخط" aria-label="تصغير الخط">A-</button>
-            ${authArea}
-            <button class="icon-btn burger" onclick="document.getElementById('mainNav').classList.toggle('open')" aria-label="القائمة">☰</button>
-          </div>
-        </div>`;
-    }
-    const foot = document.getElementById("siteFooter");
-    if(foot){
-      foot.innerHTML = `<div class="container foot-grid">
-        <div><b>⚽ PlayPass</b> — منصة السياحة الرياضية.<br><small>بياناتك محفوظة في متصفحك فقط. راجع README.</small></div>
-        <div>الحسابات التجريبية: لاعب <code>player@playpass.sa</code> — نادي <code>club@playpass.sa</code> — مشرف <code>admin@playpass.sa</code> (كلمة المرور: <code>123456</code>)</div>
-      </div>`;
-    }
-    applyTheme(theme()); applyFont();
-    const io = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target);} }),{threshold:.08});
-    document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+
+  const defaultClubs = [
+    { id:"c-hilal", name:"نادي الهلال", country:"السعودية", flag:"🇸🇦", city:"الرياض", color1:"#0b2447", color2:"#1a6fd4", emoji:"🌙", stadium:"المملكة أرينا", capacity:26000, founded:1957,
+      desc:"زعيم الكرة السعودية وآسيا، مشهور بأكاديميته المتطورة وأسلوب اللعب الهجومي. يستقبل اللاعبين الزوار ببرامج تدريب احترافية وجولات في مرافقه الحديثة.",
+      activities:["تدريب كرة قدم جماعي","تدريب لياقة بدنية","ورشة تكتيكية","جولة في الملعب والمتحف","لقاء مع لاعبي الفريق الأول"] },
+    { id:"c-barca", name:"نادي برشلونة", country:"إسبانيا", flag:"🇪🇸", city:"برشلونة", color1:"#a50044", color2:"#004d98", emoji:"🔵", stadium:"الكامب نو", capacity:99354, founded:1899,
+      desc:"أحد أشهر أندية العالم ومدرسة لاماسيا العريقة. تجربة الزيارة تشمل التدرب بأسلوب التيكي-تاكا وتحليل الأداء بالفيديو.",
+      activities:["تدريب بأسلوب لاماسيا","تحليل أداء بالفيديو","جولة في الكامب نو","ورشة تغذية رياضية","مباراة ودية مع فئات النادي"] },
+    { id:"c-bayern", name:"بايرن ميونخ", country:"ألمانيا", flag:"🇩🇪", city:"ميونخ", color1:"#dc052d", color2:"#7a0019", emoji:"🔴", stadium:"أليانز أرينا", capacity:75000, founded:1900,
+      desc:"العملاق البافاري بانضباطه الألماني ومركز التدريب الأحدث أوروبياً. برامج بدنية وتكتيكية عالية الكثافة للزوار.",
+      activities:["تدريب بدني عالي الكثافة","ورشة تكتيكية","اختبارات قياس بدنية","جولة في أليانز أرينا","لقاء مع الطاقم الفني"] },
+    { id:"c-ahly", name:"النادي الأهلي", country:"مصر", flag:"🇪🇬", city:"القاهرة", color1:"#c8102e", color2:"#7a0019", emoji:"🦅", stadium:"استاد القاهرة", capacity:75000, founded:1907,
+      desc:"نادي القرن الإفريقي وقلعة البطولات. أجواء جماهيرية استثنائية وبرامج تدريبية تجمع بين المهارة والروح القتالية.",
+      activities:["تدريب كرة قدم جماعي","تدريب حراس المرمى","جولة في الجزيرة","محاضرة في الثقافة الرياضية","مباراة ودية"] },
+    { id:"c-ajax", name:"أياكس أمستردام", country:"هولندا", flag:"🇳🇱", city:"أمستردام", color1:"#d2122e", color2:"#ffffff", emoji:"⚪", stadium:"يوهان كرويف أرينا", capacity:55500, founded:1900,
+      desc:"مدرسة المواهب الأوروبية الأولى. يركز برنامج الزوار على تطوير المهارة الفردية والذكاء التكتيكي للاعبين الشباب.",
+      activities:["تدريب المهارات الفردية","ورشة ذكاء تكتيكي","قياسات أداء","جولة في الأكاديمية","مباراة مصغرة"] },
+    { id:"c-sao", name:"نادي ساو باولو", country:"البرازيل", flag:"🇧🇷", city:"ساو باولو", color1:"#1493d1", color2:"#c8102e", emoji:"🇧🇷", stadium:"المورومبي", capacity:66795, founded:1930,
+      desc:"مهد السامبا ونجوم العالم. تجربة ممتعة تجمع بين كرة الشوارع والتدريب الأكاديمي على الطريقة البرازيلية.",
+      activities:["كرة شاطئية وشوارع","تدريب مهارات السامبا","ورشة إيقاع وحركة","جولة في المورومبي","مباراة استعراضية"] },
+    { id:"c-tokyo", name:"طوكيو فيردي", country:"اليابان", flag:"🇯🇵", city:"طوكيو", color1:"#0a7a3d", color2:"#0b2447", emoji:"🟢", stadium:"أجينوموتو", capacity:49970, founded:1969,
+      desc:"الانضباط الياباني والتقنية العالية. برامج تجمع بين التدريب البدني الدقيق والثقافة الرياضية اليابانية.",
+      activities:["تدريب انضباطي صباحي","تحليل تقني بالذكاء الاصطناعي","ورشة ثقافة رياضية","جولة في مرافق النادي","تدريب استشفاء"] },
+    { id:"c-sydney", name:"نادي سيدني", country:"أستراليا", flag:"🇦🇺", city:"سيدني", color1:"#0ea5e9", color2:"#0b2447", emoji:"🌊", stadium:"أليانز سيدني", capacity:42500, founded:2004,
+      desc:"بوابة كرة القدم في أوقيانوسيا بمرافق عصرية ومناخ مثالي للتدريب على مدار السنة.",
+      activities:["تدريب لياقة هوائية","تدريب تكتيكي","جولة بحرية رياضية","ورشة إنجليزية رياضية","مباراة ودية"] },
+    { id:"c-raja", name:"نادي الرجاء الرياضي", country:"المغرب", flag:"🇲🇦", city:"الدار البيضاء", color1:"#0a7a3d", color2:"#ffffff", emoji:"🦅", stadium:"دونور", capacity:67000, founded:1949,
+      desc:"النسور الخضر وجماهير الكورفا سود الشهيرة عالمياً. تجربة فريدة في قلب الكرة المغربية.",
+      activities:["تدريب جماعي","جولة في مركب الوازيس","لقاء مع الجماهير","ورشة تكتيكية","مباراة ودية"] },
+    { id:"c-galatasaray", name:"نادي غلطة سراي", country:"تركيا", flag:"🇹🇷", city:"إسطنبول", color1:"#ff0000", color2:"#ffffff", emoji:"🟡", stadium:"رامضان شكر", capacity:52000, founded:1905,
+      desc:"أحد أشهر أندية تركيا وأوروبا، يتمتع بقاعدة جماهيرية عريضة ومرافق رياضية وسياحية رائعة في قلب إسطنبول.",
+      activities:["تدريب كرة قدم جماعي","جولة في ملعب رامضان شكر","حفلات ونشاطات ترفيهية","جولات سياحية في إسطنبول","تجارب طعام تركي أصلي","زيارة معالم إسطنبول التاريخية"] }
+  ];
+
+  const defaultRequests = [
+    { id:"r-1001", playerId:"u-player", clubId:"c-barca", activities:["تدريب بأسلوب لاماسيا","جولة في الكامب نو"], start:"2026-11-10", end:"2026-11-16", notes:"أرغب بتطوير التمرير والاستحواذ.", status:"approved", createdAt:"2026-09-20" },
+    { id:"r-1002", playerId:"u-player", clubId:"c-hilal", activities:["تدريب لياقة بدنية"], start:"2026-12-01", end:"2026-12-05", notes:"", status:"pending", createdAt:"2026-10-02" }
+  ];
+
+  const defaultSchedules = [
+    { id:"s-1", requestId:"r-1001", day:"اليوم 1 — 10 نوفمبر", time:"09:00 - 11:00", title:"تدريب استحواذ وتمرير", place:"ملعب لاماسيا الفرعي" },
+    { id:"s-2", requestId:"r-1001", day:"اليوم 1 — 10 نوفمبر", time:"16:00 - 17:30", title:"جولة في الكامب نو والمتحف", place:"الكامب نو" },
+    { id:"s-3", requestId:"r-1001", day:"اليوم 3 — 12 نوفمبر", time:"10:00 - 12:00", title:"تحليل أداء بالفيديو", place:"قاعة التحليل" }
+  ];
+
+  function init(){
+    if(!localStorage.getItem(USERS_KEY)) localStorage.setItem(USERS_KEY, JSON.stringify(defaultUsers));
+    if(!localStorage.getItem(CLUBS_KEY)) localStorage.setItem(CLUBS_KEY, JSON.stringify(defaultClubs));
+    if(!localStorage.getItem(REQUESTS_KEY)) localStorage.setItem(REQUESTS_KEY, JSON.stringify(defaultRequests));
+    if(!localStorage.getItem(SCHEDULES_KEY)) localStorage.setItem(SCHEDULES_KEY, JSON.stringify(defaultSchedules));
   }
-  window.renderChrome = renderChrome;
+  init();
+
+  function getUsers(){ return load(USERS_KEY, []); }
+  function getClubs(){ return load(CLUBS_KEY, []); }
+  function getCountries(){ return [...new Set(getClubs().map(c => c.country))]; }
+  function getClub(id){ return getClubs().find(c => c.id === id); }
+  function addClub(club){
+    const clubs = getClubs();
+    const c = Object.assign({ id: uid("c"), flag:"🏟️", emoji:"⚽", color1:"#0e7c5b", color2:"#0b2447", capacity:10000, founded:new Date().getFullYear(), city:"", stadium:"", activities:[] }, club);
+    clubs.push(c);
+    save(CLUBS_KEY, clubs);
+    return c;
+  }
+  function updateClub(id, patch){
+    const clubs = getClubs();
+    const idx = clubs.findIndex(c => c.id === id);
+    if(idx === -1) return null;
+    clubs[idx] = Object.assign({}, clubs[idx], patch);
+    save(CLUBS_KEY, clubs);
+    return clubs[idx];
+  }
+  function getRequests(){ return load(REQUESTS_KEY, []); }
+  function getMyRequests(userId){
+    return getRequests().filter(r => r.playerId === userId).sort((a,b) => b.createdAt.localeCompare(a.createdAt));
+  }
+  function getClubRequests(clubId){
+    return getRequests().filter(r => r.clubId === clubId).sort((a,b) => b.createdAt.localeCompare(a.createdAt));
+  }
+  function createRequest(data){
+    const requests = getRequests();
+    const r = Object.assign({ id: uid("r"), status:"pending", createdAt: new Date().toISOString().slice(0,10) }, data);
+    requests.push(r);
+    save(REQUESTS_KEY, requests);
+    return r;
+  }
+  function setRequestStatus(id, status){
+    const requests = getRequests();
+    const r = requests.find(x => x.id === id);
+    if(r){ r.status = status; save(REQUESTS_KEY, requests); }
+    return r;
+  }
+  function getSchedules(){ return load(SCHEDULES_KEY, []); }
+  function getScheduleFor(requestId){
+    return getSchedules().filter(s => s.requestId === requestId);
+  }
+  function addSlot(slot){
+    const schedules = getSchedules();
+    const s = Object.assign({ id: uid("s") }, slot);
+    schedules.push(s);
+    save(SCHEDULES_KEY, schedules);
+    return s;
+  }
+  function removeSlot(id){
+    const schedules = getSchedules().filter(s => s.id !== id);
+    save(SCHEDULES_KEY, schedules);
+  }
+
+  window.DB = {
+    register: function(userData){
+      const users = load(USERS_KEY, []);
+      if(users.some(u => u.email.toLowerCase() === userData.email.toLowerCase())){
+        return { success:false, message:"البريد الإلكتروني مسجل مسبقاً" };
+      }
+      const user = Object.assign({ id: uid("u"), photo:"" }, userData);
+      users.push(user);
+      save(USERS_KEY, users);
+      return { success:true, user };
+    },
+    login: function(email, pass){
+      const users = load(USERS_KEY, []);
+      const user = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.pass === pass);
+      if(!user) return null;
+      localStorage.setItem(CURRENT_USER_KEY, user.id);
+      return user;
+    },
+    logout: function(){ localStorage.removeItem(CURRENT_USER_KEY); },
+    getCurrentUser: function(){
+      const id = localStorage.getItem(CURRENT_USER_KEY);
+      if(!id) return null;
+      const users = load(USERS_KEY, []);
+      return users.find(u => u.id === id) || null;
+    },
+    getUsers: getUsers,
+    getClubs: getClubs,
+    getClub: getClub,
+    addClub: addClub,
+    updateClub: updateClub,
+    getCountries: getCountries,
+    getRequests: getRequests,
+    getMyRequests: getMyRequests,
+    getClubRequests: getClubRequests,
+    createRequest: createRequest,
+    setRequestStatus: setRequestStatus,
+    getSchedules: getSchedules,
+    getScheduleFor: getScheduleFor,
+    addSlot: addSlot,
+    removeSlot: removeSlot,
+    all: () => ({ users: load(USERS_KEY,[]), clubs: getClubs(), requests: getRequests(), schedules: getSchedules() }),
+    reset: () => {
+      localStorage.removeItem(USERS_KEY);
+      localStorage.removeItem(CLUBS_KEY);
+      localStorage.removeItem(REQUESTS_KEY);
+      localStorage.removeItem(SCHEDULES_KEY);
+      localStorage.removeItem(CURRENT_USER_KEY);
+      location.reload();
+    }
+  };
 })();
+    
    
