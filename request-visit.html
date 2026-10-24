@@ -2,56 +2,160 @@
 <html lang="ar" dir="rtl" data-theme="light">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>طلب زيارة | PlayPass</title>
+<title>تسجيل الدخول | PlayPass</title>
 <link rel="stylesheet" href="css/style.css">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0a1a33">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<style>
+  .reg-form{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px;box-shadow:var(--shadow);margin-top:20px}
+  .reg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+  .reg-field{display:grid;gap:6px;margin-bottom:12px}
+  .reg-field label{font-weight:800;font-size:.9rem}
+  .reg-field input,.reg-field select,.reg-field textarea{background:var(--bg);border:1.5px solid var(--border);border-radius:11px;padding:11px 13px;font-family:inherit;font-size:1rem;color:var(--text);width:100%}
+  .reg-field input:focus,.reg-field select:focus{outline:2px solid var(--green);border-color:var(--green)}
+  .photo-preview{width:120px;height:120px;border-radius:50%;object-fit:cover;border:2px solid var(--border);margin:8px 0;display:none}
+  .file-input{margin:8px 0}
+  .terms{font-size:.85rem;color:var(--muted);margin-top:10px}
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main">تخطَّ إلى المحتوى</a>
 <header class="site-header" id="siteHeader"></header>
 <main class="container" id="main">
-  <div class="section"><div class="form-card">
-    <h2 style="margin-top:0">📝 نموذج طلب الزيارة</h2>
-    <div id="clubBox"></div><div id="msg"></div>
-    <div class="field"><label>الأنشطة المطلوبة (اختر واحداً على الأقل)</label><div class="checks" id="actChecks"></div></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      <div class="field"><label for="start">تاريخ بداية الزيارة</label><input id="start" type="date"></div>
-      <div class="field"><label for="end">تاريخ نهاية الزيارة</label><input id="end" type="date"></div>
+  <div class="section">
+    <div class="form-card reveal">
+      <h2 style="margin-top:0">🔐 تسجيل الدخول / إنشاء حساب</h2>
+      <p style="color:var(--muted)">اختر دخولك أو أنشئ حساب جديد. بياناتك تُحفظ بشكل منفصل عن الآخرين.</p>
+      
+      <div class="tabs" role="tablist">
+        <button class="tab active" id="tabLogin" onclick="showTab('login')">تسجيل الدخول</button>
+        <button class="tab" id="tabReg" onclick="showTab('reg')">إنشاء حساب جديد</button>
+      </div>
+
+      <!-- تسجيل الدخول -->
+      <div id="paneLogin">
+        <div id="loginMsg"></div>
+        <div class="field"><label for="email">البريد الإلكتروني</label><input id="email" type="email" placeholder="user@mail.com" autocomplete="username"></div>
+        <div class="field"><label for="pass">كلمة المرور</label><input id="pass" type="password" placeholder="••••••" autocomplete="current-password"></div>
+        <button class="btn btn-primary" style="width:100%" onclick="doLogin()">دخول</button>
+        <div class="alert info" style="margin-top:14px">💡 حسابات تجريبية:
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+            <button class="btn btn-ghost btn-sm" onclick="quick('player@playpass.sa','123456')">لاعب ⚽</button>
+            <button class="btn btn-ghost btn-sm" onclick="quick('visitor@playpass.sa','123456')">زائر 🎟️</button>
+            <button class="btn btn-ghost btn-sm" onclick="quick('club@playpass.sa','123456')">نادي 🏟️</button>
+            <button class="btn btn-ghost btn-sm" onclick="quick('admin@playpass.sa','123456')">مشرف 📊</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- إنشاء حساب -->
+      <div id="paneReg" style="display:none">
+        <div id="regMsg"></div>
+        <div class="reg-form">
+          <div class="reg-row">
+            <div class="reg-field"><label for="rname">الاسم completo</label><input id="rname" type="text" placeholder="مثال: أحمد الشمري"></div>
+            <div class="reg-field"><label for="rdob">تاريخ الميلاد</label><input id="rdob" type="date"></div>
+          </div>
+          <div class="reg-field"><label for="rtype">نوع الوثيقة</label><select id="rtype">
+            <option value="national">بطاقة هوية (سعودي)</option>
+            <option value="iqama">إقامة (مقيم في السعودية)</option>
+            <option value="passport">جواز سفر (خارج السعودية)</option>
+          </select></div>
+          <div class="reg-field"><label for="rid">رقم الوثيقة</label><input id="rid" type="text" placeholder="أدخل رقم الهوية/الإقامة/الجواز"></div>
+          <div class="reg-field"><label for="remail">البريد الإلكتروني</label><input id="remail" type="email" placeholder="you@mail.com"></div>
+          <div class="reg-field"><label for="rphoto">صورة شخصية (بدون فلتر)</label><input id="rphoto" type="file" accept="image/*" class="file-input"><img id="photoPreview" class="photo-preview"></div>
+          <div class="reg-row">
+            <div class="reg-field"><label for="rpass">كلمة المرور</label><input id="rpass" type="password" placeholder="••••••"></div>
+            <div class="reg-field"><label for="rpass2">تأكيد كلمة المرور</label><input id="rpass2" type="password" placeholder="أعد كتابة كلمة المرور"></div>
+          </div>
+          <div class="terms">بتسجيلك توافق على سياسة الخصوصية وشروط الاستخدام.</div>
+          <button class="btn btn-accent" style="width:100%" onclick="doRegister()">إنشاء الحساب</button>
+        </div>
+      </div>
     </div>
-    <div class="field"><label for="notes">ملاحظات اختيارية</label><textarea id="notes" rows="3" placeholder="أخبر النادي عن مستواك أو أهدافك..."></textarea></div>
-    <button class="btn btn-primary" style="width:100%" onclick="submitReq()">إرسال الطلب إلى النادي ✈️</button>
-    <p class="hint" style="color:var(--muted);font-size:.85rem">بالإرسال ستصبح حالة طلبك <b>قيد المراجعة ⏳</b> ويمكنك متابعتها في صفحة «طلباتي».</p>
-  </div></div>
+  </div>
 </main>
 <footer id="siteFooter"></footer><div id="toasts"></div>
 <script src="js/seed.js"></script><script src="js/store.js"></script><script src="js/app.js"></script>
 <script>
-renderChrome("clubs");
-const s = requireRole(["player", "visitor"], "login.html");
-const club = DB.club(qs("club"));
-if(!club){ document.getElementById("clubBox").innerHTML = '<div class="alert err">اختر النادي أولاً من <a href="clubs.html">صفحة الأندية</a>.</div>'; }
-else{
-  document.getElementById("clubBox").innerHTML = `<div class="alert info">تتقدم بطلب إلى: <b>${esc(club.name)}</b> ${club.flag} — ${esc(club.country)}</div>`;
-  document.getElementById("actChecks").innerHTML = club.activities.map((a,i)=>
-    `<label class="check"><input type="checkbox" value="${esc(a)}"><span><b>${esc(a)}</b></span></label>`).join("");
-  const t = new Date().toISOString().slice(0,10);
-  document.getElementById("start").min = t; document.getElementById("end").min = t;
+renderChrome("home");
+
+function showTab(t){
+  document.getElementById("paneLogin").style.display = t==="login" ? "" : "none";
+  document.getElementById("paneReg").style.display = t==="reg" ? "" : "none";
+  document.getElementById("tabLogin").classList.toggle("active", t==="login");
+  document.getElementById("tabReg").classList.toggle("active", t==="reg");
 }
-function submitReq(){
-  if(!club || !s){ location.href = !s ? "login.html" : "clubs.html"; return; }
-  const acts = [...document.querySelectorAll("#actChecks input:checked")].map(i=>i.value);
-  const start = document.getElementById("start").value, end = document.getElementById("end").value;
-  const notes = document.getElementById("notes").value.trim();
-  const box = document.getElementById("msg");
-  if(!acts.length){ box.innerHTML = '<div class="alert err">اختر نشاطاً واحداً على الأقل.</div>'; return; }
-  if(!start || !end){ box.innerHTML = '<div class="alert err">حدد تاريخي البداية والنهاية.</div>'; return; }
-  if(end < start){ box.innerHTML = '<div class="alert err">تاريخ النهاية يجب أن يكون بعد البداية.</div>'; return; }
-  const r = DB.createRequest({ playerId: s.id, clubId: club.id, activities: acts, start, end, notes });
-  toast("تم إرسال طلبك بنجاح 🎉");
-  setTimeout(()=> location.href = "request-details.html?id=" + r.id, 600);
+
+function doLogin(){
+  const e = document.getElementById("email").value.trim().toLowerCase();
+  const p = document.getElementById("pass").value;
+  const u = DB.login(e, p);
+  if(!u){
+    document.getElementById("loginMsg").innerHTML = '<div class="alert err">البريد الإلكتروني أو كلمة المرور غير صحيحة.</div>';
+    return;
+  }
+  toast("مرحباً " + u.name + " 👋");
+  setTimeout(()=> location.href = homeFor(u.role), 500);
+}
+
+function quick(email,pass){
+  const u = DB.getUsers().find(x=>x.email===email);
+  if(u){ DB.login(email,pass); toast("تم الدخول كـ " + u.name); setTimeout(()=> location.href = homeFor(u.role), 500); }
+}
+
+function doRegister(){
+  const name = document.getElementById("rname").value.trim();
+  const email = document.getElementById("remail").value.trim().toLowerCase();
+  const pass = document.getElementById("rpass").value;
+  const pass2 = document.getElementById("rpass2").value;
+  const country = document.getElementById("rcountry") ? document.getElementById("rcountry").value.trim() : "—";
+  const dob = document.getElementById("rdob").value;
+  const idType = document.getElementById("rtype").value;
+  const idNumber = document.getElementById("rid").value.trim();
+  const photoInput = document.getElementById("rphoto");
+  const box = document.getElementById("regMsg");
+
+  if(name.length < 2){ box.innerHTML = '<div class="alert err">فضلاً أدخل الاسم.</div>'; return; }
+  if(!dob){ box.innerHTML = '<div class="alert err">فضلاً حدد تاريخ الميلاد.</div>'; return; }
+  if(!idNumber){ box.innerHTML = '<div class="alert err">فضلاً أدخل رقم الوثيقة.</div>'; return; }
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ box.innerHTML = '<div class="alert err">البريد الإلكتروني غير صالح.</div>'; return; }
+  if(pass.length < 6){ box.innerHTML = '<div class="alert err">كلمة المرور قصيرة (6 أحرف فأكثر).</div>'; return; }
+  if(pass !== pass2){ box.innerHTML = '<div class="alert err">كلمة المرور غير متطابقة.</div>'; return; }
+
+  let photoData = "";
+  if(photoInput.files[0]){
+    const reader = new FileReader();
+    reader.onload = function(e){
+      photoData = e.target.result;
+      completeRegister(name,email,pass,country,dob,idType,idNumber,photoData);
+    };
+    reader.readAsDataURL(photoInput.files[0]);
+    return;
+  }
+  completeRegister(name,email,pass,country,dob,idType,idNumber,photoData);
+}
+
+function completeRegister(name,email,pass,country,dob,idType,idNumber,photoData){
+  const res = DB.register({
+    role:"player", name, email, pass, country, dob, idType, idNumber, photo:photoData
+  });
+  if(!res.success){
+    document.getElementById("regMsg").innerHTML = '<div class="alert err">' + res.message + '</div>';
+    return;
+  }
+  document.getElementById("regMsg").innerHTML = '<div class="alert ok">تم إنشاء حسابك بنجاح 🎉 جارٍ تحويلك...</div>';
+  setTimeout(()=>{
+    DB.login(email, pass);
+    location.href = homeFor("player");
+  }, 800);
+}
+
+if(DB.getCurrentUser()){
+  const s = DB.getCurrentUser();
+  location.href = homeFor(s.role);
 }
 </script>
 </body>
