@@ -65,6 +65,7 @@
           </select></div>
           <div class="reg-field"><label for="rid">رقم الوثيقة</label><input id="rid" type="text" placeholder="أدخل رقم الهوية/الإقامة/الجواز"></div>
           <div class="reg-field"><label for="remail">البريد الإلكتروني</label><input id="remail" type="email" placeholder="you@mail.com"></div>
+          <div class="reg-field"><label for="rcountry">الدولة</label><input id="rcountry" type="text" placeholder="مثال: السعودية"></div>
           <div class="reg-field"><label for="rphoto">صورة شخصية (بدون فلتر)</label><input id="rphoto" type="file" accept="image/*" class="file-input"><img id="photoPreview" class="photo-preview"></div>
           <div class="reg-row">
             <div class="reg-field"><label for="rpass">كلمة المرور</label><input id="rpass" type="password" placeholder="••••••"></div>
@@ -111,7 +112,7 @@ function doRegister(){
   const email = document.getElementById("remail").value.trim().toLowerCase();
   const pass = document.getElementById("rpass").value;
   const pass2 = document.getElementById("rpass2").value;
-  const country = document.getElementById("rcountry") ? document.getElementById("rcountry").value.trim() : "—";
+  const country = document.getElementById("rcountry").value.trim() || "—";
   const dob = document.getElementById("rdob").value;
   const idType = document.getElementById("rtype").value;
   const idNumber = document.getElementById("rid").value.trim();
