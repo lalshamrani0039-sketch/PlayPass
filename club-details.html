@@ -18,14 +18,31 @@
 <script>
 renderChrome("clubs");
 (function(){
-  const c = DB.club(qs("id"));
-  const box = document.getElementById("wrap");
-  if(!c){ box.innerHTML = '<div class="alert err">النادي غير موجود. <a href="clubs.html">عودة للأندية</a></div>'; return; }
+  const wrap = document.getElementById("wrap");
+  const id = new URLSearchParams(location.search).get("id");
+  
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m])); }
+  
+  if(!id){
+    wrap.innerHTML = '<div class="alert err">未指定 النادي. <a href="clubs.html">عودة للأندية</a></div>';
+    return;
+  }
+  
+  const c = DB.getClub(id);
+  if(!c){
+    wrap.innerHTML = '<div class="alert err">النادي غير موجود. <a href="clubs.html">عودة للأندية</a></div>';
+    return;
+  }
+  
   document.title = c.name + " | PlayPass";
-  box.innerHTML = `
+  
+  const imgHtml = '<span class="ph-em" aria-hidden="true">' + (c.emoji||"🏟️") + '</span>'
+    + '<img src="' + (window.clubImg ? window.clubImg(c.id, 1400) : '') + '" alt="' + esc(c.name) + '" loading="lazy" onerror="this.remove()">';
+  
+  wrap.innerHTML = `
     <div class="club-hero">
       <div class="club-cover" style="background:linear-gradient(135deg,${c.color1},${c.color2})">
-        ${ph(clubImg(c.id, 1400), c.emoji, "ملعب " + c.name)}
+        ${imgHtml}
         <div class="ov"></div><span class="flag">${c.flag}</span>
         <span class="crest">${c.emoji}</span><h1>${esc(c.name)}</h1>
       </div>
