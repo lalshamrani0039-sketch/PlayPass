@@ -15,6 +15,7 @@
 <main class="container" id="main">
   <div class="section">
     <div class="section-head"><div><h2>📋 طلباتي</h2><p>تابع حالة طلبات الزيارة مصنّفة حسب الحالة</p></div><a class="btn btn-primary btn-sm" href="clubs.html">+ طلب جديد</a></div>
+    <div id="userInfo" class="alert info" style="margin-bottom:12px"></div>
     <div class="tabs">
       <button class="tab active" data-f="" onclick="setFilter('',this)">الكل</button>
       <button class="tab" data-f="pending" onclick="setFilter('pending',this)">⏳ قيد المراجعة</button>
@@ -32,6 +33,10 @@ renderChrome("req");
 const s = requireRole(["player", "visitor"], "login.html");
 console.log("[DEBUG] session:", s);
 
+if(s){
+  document.getElementById("userInfo").innerHTML = `👤 <b>${esc(s.name)}</b> (${s.role}) — ID: <code>${s.id}</code>`;
+}
+
 let F = "";
 function setFilter(f, btn){ F = f; document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active")); btn.classList.add("active"); render(); }
 
@@ -41,7 +46,6 @@ function render(){
     if(typeof DB.myRequests === "function"){
       list = DB.myRequests(s.id);
     } else {
-      // Fallback for old store.js
       const all = DB.getRequests ? DB.getRequests() : [];
       list = all.filter(r => r.playerId === s.id).sort((a,b) => b.createdAt.localeCompare(a.createdAt));
     }
@@ -61,7 +65,9 @@ function render(){
         ${r.status==="approved" ? `<a class="btn btn-primary btn-sm" href="schedule.html?request=${r.id}">📅 عرض الجدول</a>` : ""}
       </div></article>`;
   }).join("");
-  document.getElementById("empty").textContent = list.length ? "" : "لا توجد طلبات هنا بعد — ابدأ بزيارة صفحة الأندية وقدّم أول طلب! ⚽";
+  
+  const emptyMsg = list.length ? "" : "لا توجد طلبات هنا بعد — ابدأ بزيارة صفحة الأندية وقدّم أول طلب! ⚽";
+  document.getElementById("empty").textContent = emptyMsg;
 }
 
 if(s) render();
