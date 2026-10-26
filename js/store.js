@@ -24,34 +24,34 @@
 
   const defaultClubs = [
     { id:"c-hilal", name:"نادي الهلال", country:"السعودية", flag:"🇸🇦", city:"الرياض", color1:"#0b2447", color2:"#1a6fd4", emoji:"🌙", stadium:"المملكة أرينا", capacity:26000, founded:1957,
-      desc:"زعيم الكرة السعودية وآسيا، مشهور بأكاديميته المتطورة وأسلوب اللعب الهجومي.",
+      desc:"زعيم الكرة السعودية وآسيا.",
       activities:["تدريب كرة قدم جماعي","تدريب لياقة بدنية","ورشة تكتيكية","جولة في الملعب والمتحف","لقاء مع لاعبي الفريق الأول"] },
     { id:"c-barca", name:"نادي برشلونة", country:"إسبانيا", flag:"🇪🇸", city:"برشلونة", color1:"#a50044", color2:"#004d98", emoji:"🔵", stadium:"الكامب نو", capacity:99354, founded:1899,
-      desc:"أحد أشهر أندية العالم ومدرسة لاماسيا العريقة.",
-      activities:["تدريب بأسلوب لاماسيا","تحليل أداء بالفيديو","جولة في الكامب نو","ورشة تغذية رياضية","مباراة ودية مع فئات النادي"] },
+      desc:"أحد أشهر أندية العالم ومدرسة لاماسيا.",
+      activities:["تدريب بأسلوب لاماسيا","تحليل أداء بالفيديو","جولة في الكامب نو","ورشة تغذية رياضية","مباراة ودية"] },
     { id:"c-bayern", name:"بايرن ميونخ", country:"ألمانيا", flag:"🇩🇪", city:"ميونخ", color1:"#dc052d", color2:"#7a0019", emoji:"🔴", stadium:"أليانز أرينا", capacity:75000, founded:1900,
-      desc:"العملاق البافاري بانضباطه الألماني.",
-      activities:["تدريب بدني عالي الكثافة","ورشة تكتيكية","اختبارات قياس بدنية","جولة في أليانز أرينا"] },
+      desc:"العملاق البافاري.",
+      activities:["تدريب بدني عالي الكثافة","ورشة تكتيكية","اختبارات قياس بدنية"] },
     { id:"c-ahly", name:"النادي الأهلي", country:"مصر", flag:"🇪🇬", city:"القاهرة", color1:"#c8102e", color2:"#7a0019", emoji:"🦅", stadium:"استاد القاهرة", capacity:75000, founded:1907,
-      desc:"نادي القرن الإفريقي وقلعة البطولات.",
-      activities:["تدريب كرة قدم جماعي","تدريب حراس المرمى","جولة في الجزيرة","محاضرة في الثقافة الرياضية"] },
+      desc:"نادي القرن الإفريقي.",
+      activities:["تدريب كرة قدم جماعي","تدريب حراس المرمى","جولة في الجزيرة"] },
     { id:"c-ajax", name:"أياكس أمستردام", country:"هولندا", flag:"🇳🇱", city:"أمستردام", color1:"#d2122e", color2:"#ffffff", emoji:"⚪", stadium:"يوهان كرويف أرينا", capacity:55500, founded:1900,
-      desc:"مدرسة المواهب الأوروبية الأولى.",
-      activities:["تدريب المهارات الفردية","ورشة ذكاء تكتيكي","قياسات أداء","جولة في الأكاديمية"] },
+      desc:"مدرسة المواهب الأوروبية.",
+      activities:["تدريب المهارات الفردية","ورشة ذكاء تكتيكي","قياسات أداء"] },
     { id:"c-sao", name:"نادي ساو باولو", country:"البرازيل", flag:"🇧🇷", city:"ساو باولو", color1:"#1493d1", color2:"#c8102e", emoji:"🇧🇷", stadium:"المورومبي", capacity:66795, founded:1930,
-      desc:"مهد السامبا ونجوم العالم.",
-      activities:["كرة شاطئية وشوارع","تدريب مهارات السامبا","ورشة إيقاع وحركة","جولة في المورومبي"] },
+      desc:"مهد السامبا.",
+      activities:["كرة شاطئية وشوارع","تدريب مهارات السامبا"] },
     { id:"c-tokyo", name:"طوكيو فيردي", country:"اليابان", flag:"🇯🇵", city:"طوكيو", color1:"#0a7a3d", color2:"#0b2447", emoji:"🟢", stadium:"أجينوموتو", capacity:49970, founded:1969,
-      desc:"الانضباط الياباني والتقنية العالية.",
-      activities:["تدريب انضباطي صباحي","تحليل تقني بالذكاء الاصطناعي","ورشة ثقافة رياضية"] },
+      desc:"الانضباط الياباني.",
+      activities:["تدريب انضباطي صباحي","تحليل تقني بالذكاء الاصطناعي"] },
     { id:"c-sydney", name:"نادي سيدني", country:"أستراليا", flag:"🇦🇺", city:"سيدني", color1:"#0ea5e9", color2:"#0b2447", emoji:"🌊", stadium:"أليانز سيدني", capacity:42500, founded:2004,
       desc:"بوابة كرة القدم في أوقيانوسيا.",
-      activities:["تدريب لياقة هوائية","تدريب تكتيكي","جولة بحرية رياضية"] },
+      activities:["تدريب لياقة هوائية","تدريب تكتيكي"] },
     { id:"c-raja", name:"نادي الرجاء الرياضي", country:"المغرب", flag:"🇲🇦", city:"الدار البيضاء", color1:"#0a7a3d", color2:"#ffffff", emoji:"🦅", stadium:"دونور", capacity:67000, founded:1949,
-      desc:"النسور الخضر وجماهير الكورفا سود.",
+      desc:"النسور الخضر.",
       activities:["تدريب جماعي","جولة في مركب الوازيس","لقاء مع الجماهير"] },
     { id:"c-galatasaray", name:"نادي غلطة سراي", country:"تركيا", flag:"🇹🇷", city:"إسطنبول", color1:"#ff0000", color2:"#ffffff", emoji:"🟡", stadium:"رامضان شكر", capacity:52000, founded:1905,
-      desc:"أحد أشهر أندية تركيا وأوروبا.",
+      desc:"أحد أشهر أندية تركيا.",
       activities:["تدريب كرة قدم جماعي","جولة في ملعب رامضان شكر","حفلات ونشاطات ترفيهية"] }
   ];
 
@@ -73,6 +73,13 @@
     if(!localStorage.getItem(SCHEDULES_KEY)) localStorage.setItem(SCHEDULES_KEY, JSON.stringify(defaultSchedules));
   }
   init();
+
+  function load(key, def){
+    try{ return JSON.parse(localStorage.getItem(key)) || def; }catch(e){ return def; }
+  }
+  function save(key, data){
+    try{ localStorage.setItem(key, JSON.stringify(data)); }catch(e){}
+  }
 
   function getUsers(){ return load(USERS_KEY, []); }
   function getClubs(){ return load(CLUBS_KEY, []); }
@@ -99,6 +106,9 @@
   }
   function getClubRequests(clubId){
     return getRequests().filter(r => r.clubId === clubId).sort((a,b) => b.createdAt.localeCompare(a.createdAt));
+  }
+  function getRequest(id){
+    return getRequests().find(r => r.id === id);
   }
   function createRequest(data){
     const requests = getRequests();
@@ -163,6 +173,7 @@
     getRequests: getRequests,
     getMyRequests: getMyRequests,
     getClubRequests: getClubRequests,
+    getRequest: getRequest,
     createRequest: createRequest,
     setRequestStatus: setRequestStatus,
     getSchedules: getSchedules,
