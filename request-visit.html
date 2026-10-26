@@ -31,27 +31,45 @@
 <script>
 renderChrome("clubs");
 const s = requireRole(["player", "visitor"], "login.html");
-const club = DB.club(qs("club"));
-if(!club){ document.getElementById("clubBox").innerHTML = '<div class="alert err">اختر النادي أولاً من <a href="clubs.html">صفحة الأندية</a>.</div>'; }
-else{
+const club = DB.getClub(qs("club"));
+console.log("[DEBUG] session:", s, "club:", club);
+
+if(!club){ 
+  document.getElementById("clubBox").innerHTML = '<div class="alert err">اختر النادي أولاً من <a href="clubs.html">صفحة الأندية</a>.</div>'; 
+} else {
   document.getElementById("clubBox").innerHTML = `<div class="alert info">تتقدم بطلب إلى: <b>${esc(club.name)}</b> ${club.flag} — ${esc(club.country)}</div>`;
   document.getElementById("actChecks").innerHTML = club.activities.map((a,i)=>
     `<label class="check"><input type="checkbox" value="${esc(a)}"><span><b>${esc(a)}</b></span></label>`).join("");
   const t = new Date().toISOString().slice(0,10);
   document.getElementById("start").min = t; document.getElementById("end").min = t;
 }
+
 function submitReq(){
-  if(!club || !s){ location.href = !s ? "login.html" : "clubs.html"; return; }
+  console.log("[DEBUG] submitReq called", "s:", s, "club:", club);
+  if(!club || !s){ 
+    console.log("[DEBUG] Missing club or session");
+    location.href = !s ? "login.html" : "clubs.html"; 
+    return; 
+  }
   const acts = [...document.querySelectorAll("#actChecks input:checked")].map(i=>i.value);
   const start = document.getElementById("start").value, end = document.getElementById("end").value;
   const notes = document.getElementById("notes").value.trim();
   const box = document.getElementById("msg");
+  console.log("[DEBUG] acts:", acts, "start:", start, "end:", end);
+  
   if(!acts.length){ box.innerHTML = '<div class="alert err">اختر نشاطاً واحداً على الأقل.</div>'; return; }
   if(!start || !end){ box.innerHTML = '<div class="alert err">حدد تاريخي البداية والنهاية.</div>'; return; }
   if(end < start){ box.innerHTML = '<div class="alert err">تاريخ النهاية يجب أن يكون بعد البداية.</div>'; return; }
-  const r = DB.createRequest({ playerId: s.id, clubId: club.id, activities: acts, start, end, notes });
-  toast("تم إرسال طلبك بنجاح 🎉");
-  setTimeout(()=> location.href = "request-details.html?id=" + r.id, 600);
+  
+  try {
+    const r = DB.createRequest({ playerId: s.id, clubId: club.id, activities: acts, start, end, notes });
+    console.log("[DEBUG] Request created:", r);
+    toast("تم إرسال طلبك بنجاح 🎉");
+    setTimeout(()=> location.href = "request-details.html?id=" + r.id, 600);
+  } catch(err) {
+    console.error("[DEBUG] Error creating request:", err);
+    box.innerHTML = '<div class="alert err">حدث خطأ: ' + esc(err.message) + '</div>';
+  }
 }
 </script>
 </body>
