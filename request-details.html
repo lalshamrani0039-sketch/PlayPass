@@ -17,22 +17,43 @@
 <script src="js/seed.js"></script><script src="js/store.js"></script><script src="js/app.js"></script>
 <script>
 renderChrome("req");
-const s = requireRole(["player"], "login.html");
+const s = requireRole(["player", "visitor"], "login.html");
+console.log("[DEBUG] session:", s, "requestId:", qs("id"));
+
 (function(){
-  const r = DB.getRequest(qs("id"));
   const box = document.getElementById("wrap");
-  if(!s) return;
-  if(!r || r.playerId !== s.id){ box.innerHTML = '<div class="alert err">الطلب غير موجود أو لا تملك صلاحية عرضه.</div>'; return; }
-  const c = DB.club(r.clubId) || { name:"—", flag:"", country:"" };
+  const id = qs("id");
+  if(!s || !id){ 
+    box.innerHTML = '<div class="alert err">الطلب غير موجود. <a href="my-requests.html">طلباتي</a></div>'; 
+    return; 
+  }
+
+  // Fetch request with fallback for old store.js
+  let r = null;
+  if(typeof DB.getRequest === "function"){
+    r = DB.getRequest(id);
+  } else {
+    const all = DB.getRequests ? DB.getRequests() : [];
+    r = all.find(x => x.id === id);
+  }
+
+  if(!r || r.playerId !== s.id){ 
+    box.innerHTML = '<div class="alert err">الطلب غير موجود أو لا تملك صلاحية عرضه. <a href="my-requests.html">طلباتي</a></div>'; 
+    return; 
+  }
+
+  const c = DB.getClub ? DB.getClub(r.clubId) : null;
+  const club = c || { name:"—", flag:"", country:"" };
   const days = Math.max(1, Math.round((new Date(r.end) - new Date(r.start)) / 864e5) + 1);
+  
   box.innerHTML = `
     <div class="panel">
       <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
         <h2 style="margin:0">🧾 تفاصيل الطلب <small style="color:var(--muted)">#${esc(r.id)}</small></h2>${statusLabel(r.status)}
       </div><hr style="border:0;border-top:1px solid var(--border);margin:14px 0">
       <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
-        <div><small style="color:var(--muted)">النادي المضيف</small><br><b>${c.flag} ${esc(c.name)}</b></div>
-        <div><small style="color:var(--muted)">الدولة</small><br><b>${esc(c.country||"—")}</b></div>
+        <div><small style="color:var(--muted)">النادي المضيف</small><br><b>${esc(club.flag)} ${esc(club.name)}</b></div>
+        <div><small style="color:var(--muted)">الدولة</small><br><b>${esc(club.country||"—")}</b></div>
         <div><small style="color:var(--muted)">مدة الزيارة</small><br><b>📅 ${esc(r.start)} ← ${esc(r.end)} (${days} أيام)</b></div>
         <div><small style="color:var(--muted)">تاريخ التقديم</small><br><b>${esc(r.createdAt)}</b></div>
       </div>
