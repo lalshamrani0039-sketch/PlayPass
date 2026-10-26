@@ -1,7 +1,9 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" data-theme="light">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>استعراض الأندية | PlayPass</title>
 <link rel="stylesheet" href="css/style.css">
 <link rel="manifest" href="manifest.webmanifest">
@@ -9,49 +11,97 @@
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 </head>
+
 <body>
 <a class="skip-link" href="#main">تخطَّ إلى المحتوى</a>
 <header class="site-header" id="siteHeader"></header>
+
 <main class="container" id="main">
   <section class="page-hero reveal">
     <div class="ph" id="pagePh"></div>
-    <div class="in"><span class="eyebrow" style="background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3);color:#fff">دليل الأندية</span>
-      <h1>🏟️ الأندية المضيفة حول العالم</h1><p>صفِّ حسب الدولة أو ابحث بالاسم — واختر وجهتك القادمة</p></div>
+    <div class="in">
+      <span class="eyebrow" style="background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3);color:#fff">دليل الأندية</span>
+      <h1>🏟️ الأندية المضيفة حول العالم</h1>
+      <p>صفِّ حسب الدولة أو ابحث بالاسم — واختر وجهتك القادمة</p>
+    </div>
   </section>
+
   <div class="section">
     <div class="filters">
-      <select id="fCountry" onchange="render()" aria-label="تصفية حسب الدولة"><option value="">كل الدول 🌍</option></select>
+      <select id="fCountry" onchange="render()" aria-label="تصفية حسب الدولة">
+        <option value="">كل الدول 🌍</option>
+      </select>
       <input id="fSearch" placeholder="🔎 ابحث عن نادٍ..." oninput="render()" aria-label="بحث">
     </div>
+
     <div class="grid clubs" id="grid"></div>
     <p id="empty" style="display:none;color:var(--muted)">لا توجد أندية مطابقة — جرّب تصفية أخرى.</p>
   </div>
 </main>
-<footer id="siteFooter"></footer><div id="toasts"></div>
-<script src="js/seed.js"></script><script src="js/store.js"></script><script src="js/app.js"></script>
+
+<footer id="siteFooter"></footer>
+<div id="toasts"></div>
+
+<script src="js/seed.js"></script>
+<script src="js/store.js"></script>
+<script src="js/app.js"></script>
+
 <script>
 renderChrome("clubs");
+
 document.getElementById("pagePh").innerHTML = ph(uimg(HERO_IMG, 1600), "🏟️", "ملاعب العالم");
+
 const sel = document.getElementById("fCountry");
-DB.countries().forEach(c=>{ const o=document.createElement("option"); o.value=c; o.textContent=c; sel.appendChild(o); });
-const preset = qs("country"); if(preset) sel.value = preset;
-function render(){
-  const co = sel.value, q = document.getElementById("fSearch").value.trim();
+
+const countries = [...new Set(DB.getClubs().map(c => c.country))];
+
+countries.forEach(c => {
+  const o = document.createElement("option");
+  o.value = c;
+  o.textContent = c;
+  sel.appendChild(o);
+});
+
+const preset = qs("country");
+if (preset) sel.value = preset;
+
+function render() {
+  const co = sel.value;
+  const q = document.getElementById("fSearch").value.trim();
+
   let list = DB.clubs();
-  if(co) list = list.filter(c=>c.country===co);
-  if(q) list = list.filter(c=>c.name.includes(q)||c.city.includes(q));
-  document.getElementById("grid").innerHTML = list.map(c=>`
+
+  if (co) list = list.filter(c => c.country === co);
+  if (q) list = list.filter(c => c.name.includes(q) || c.city.includes(q));
+
+  document.getElementById("grid").innerHTML = list.map(c => `
     <article class="card">
-      <div class="card-cover" style="background:linear-gradient(135deg,${c.color1},${c.color2})">${ph(clubImg(c.id, 700), c.emoji, c.name)}<span class="shade"></span><span class="flag">${c.flag}</span></div>
-      <div class="card-body"><h3>${esc(c.name)}</h3>
-        <div class="meta"><span class="tag">📍 ${esc(c.country)} — ${esc(c.city)}</span><span class="tag green">${esc(c.activities.length)} أنشطة</span></div>
+      <div class="card-cover" style="background:linear-gradient(135deg,${c.color1},${c.color2})">
+        ${ph(clubImg(c.id, 700), c.emoji, c.name)}
+        <span class="shade"></span>
+        <span class="flag">${c.flag}</span>
+      </div>
+
+      <div class="card-body">
+        <h3>${esc(c.name)}</h3>
+        <div class="meta">
+          <span class="tag">📍 ${esc(c.country)} — ${esc(c.city)}</span>
+          <span class="tag green">${esc(c.activities.length)} أنشطة</span>
+        </div>
         <small style="color:var(--muted)">تأسس ${c.founded} • سعة الملعب ${Number(c.capacity).toLocaleString("ar")} متفرج</small>
       </div>
-      <div class="card-actions"><a class="btn btn-primary btn-sm" href="club-details.html?id=${c.id}">عرض التفاصيل</a></div>
-    </article>`).join("");
+
+      <div class="card-actions">
+        <a class="btn btn-primary btn-sm" href="club-details.html?id=${c.id}">عرض التفاصيل</a>
+      </div>
+    </article>
+  `).join("");
+
   document.getElementById("empty").style.display = list.length ? "none" : "";
 }
+
 render();
 </script>
 </body>
 </html>
+```
