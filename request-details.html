@@ -18,22 +18,22 @@
 <script>
 renderChrome("req");
 const s = requireRole(["player", "visitor"], "login.html");
-console.log("[DEBUG] session:", s, "requestId:", qs("id"));
+const id = qs("id");
+console.log("[DEBUG] session:", s, "requestId:", id);
 
 (function(){
   const box = document.getElementById("wrap");
-  const id = qs("id");
   if(!s || !id){ 
     box.innerHTML = '<div class="alert err">الطلب غير موجود. <a href="my-requests.html">طلباتي</a></div>'; 
     return; 
   }
 
-  // Fetch request with fallback for old store.js
+  // Fetch request with fallback (works even if DB.getRequest is missing)
   let r = null;
   if(typeof DB.getRequest === "function"){
     r = DB.getRequest(id);
-  } else {
-    const all = DB.getRequests ? DB.getRequests() : [];
+  } else if(typeof DB.getRequests === "function"){
+    const all = DB.getRequests();
     r = all.find(x => x.id === id);
   }
 
@@ -42,7 +42,7 @@ console.log("[DEBUG] session:", s, "requestId:", qs("id"));
     return; 
   }
 
-  const c = DB.getClub ? DB.getClub(r.clubId) : null;
+  const c = (typeof DB.getClub === "function") ? DB.getClub(r.clubId) : null;
   const club = c || { name:"—", flag:"", country:"" };
   const days = Math.max(1, Math.round((new Date(r.end) - new Date(r.start)) / 864e5) + 1);
   
