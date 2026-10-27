@@ -29,7 +29,7 @@
 <script src="js/seed.js"></script><script src="js/store.js"></script><script src="js/app.js"></script>
 <script>
 renderChrome("req");
-const s = requireRole(["player"], "login.html");
+const s = requireRole(["player", "visitor"], "login.html");
 let F = "";
 function setFilter(f, btn){ F = f; document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active")); btn.classList.add("active"); render(); }
 function render(){

@@ -2,6 +2,7 @@
 window.PLAYPASS_SEED = {
   users: [
     { id: "u-player", role: "player", name: "أحمد الشمري", email: "player@playpass.sa", pass: "123456", country: "السعودية", position: "وسط ميدان", age: 22 },
+    { id: "u-visitor", role: "visitor", name: "زائر تجريبي", email: "visitor@playpass.sa", pass: "123456", country: "مصر" },
     { id: "u-club", role: "club", name: "نادي الهلال", email: "club@playpass.sa", pass: "123456", clubId: "c-hilal" },
     { id: "u-admin", role: "admin", name: "مشرف الاتحاد", email: "admin@playpass.sa", pass: "123456" }
   ],

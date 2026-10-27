@@ -30,7 +30,7 @@
 <script src="js/seed.js"></script><script src="js/store.js"></script><script src="js/app.js"></script>
 <script>
 renderChrome("clubs");
-const s = requireRole(["player"], "login.html");
+const s = requireRole(["player", "visitor"], "login.html");
 const club = DB.club(qs("club"));
 if(!club){ document.getElementById("clubBox").innerHTML = '<div class="alert err">اختر النادي أولاً من <a href="clubs.html">صفحة الأندية</a>.</div>'; }
 else{

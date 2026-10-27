@@ -4,15 +4,18 @@
    - Cross-origin (images/fonts): network-first with cache fallback;
      pages already hide failed images behind designed gradients.
    Bump CACHE to force-refresh all clients. */
-const CACHE = "playpass-v2";
+const CACHE = "playpass-v3";
 const CORE = [
   "./",
   "index.html",
+  "about.html",
   "offline.html",
   "manifest.webmanifest",
   "icon.svg",
   "icons/icon-192.png",
   "icons/icon-512.png",
+  "icons/maskable-512.png",
+  "icons/apple-touch-icon.png",
   "css/style.css",
   "js/seed.js",
   "js/store.js",
@@ -54,11 +57,14 @@ self.addEventListener("fetch", (e) => {
 
   if (req.mode === "navigate") {
     e.respondWith(
-      fetch(req).then((res) => {
-        const copy = res.clone();
-        caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
-        return res;
-      }).catch(() => caches.match(req).then((m) => m || caches.match("offline.html")))
+      caches.match(req).then((cached) => {
+        if (cached) return cached;
+        return fetch(req).then((res) => {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
+          return res;
+        }).catch(() => caches.match("offline.html"));
+      })
     );
     return;
   }
