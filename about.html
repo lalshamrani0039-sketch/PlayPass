@@ -1,71 +1,74 @@
-<!DOCTYPE html> 
-<html lang="ar" dir="rtl" data-theme="light"> 
-<head> 
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-<title>من نحن | PlayPass</title> 
-<meta name="description" content="تعرف على PlayPass — منصة السياحة الرياضية التي تسهل اكتشاف الأندية والملاعب والأنشطة الرياضية حول العالم."> 
-<link rel="stylesheet" href="css/style.css"> 
-<link rel="manifest" href="manifest.webmanifest"> 
-<meta name="theme-color" content="#0a1a33"> 
-<link rel="icon" type="image/svg+xml" href="icon.svg"> 
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png"> 
-</head> 
-<body> 
-<a class="skip-link" href="#main">تخطَّ إلى المحتوى</a> 
-<header class="site-header" id="siteHeader"></header> 
-<main class="container" id="main"> 
-  <section class="page-hero reveal"> 
-    <div class="ph" id="pagePh"></div> 
-    <div class="in"><span class="eyebrow" style="background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3);color:#fff">قصتنا</span> 
-      <h1>ℹ️ من نحن</h1><p>PlayPass — جسرك العربي إلى ملاعب العالم</p></div> 
-  </section> 
- 
-  <div class="section"> 
-    <div class="panel reveal"> 
-      <h3>⚽ ما هي PlayPass؟</h3> 
-      <p class="lead">PlayPass منصة سياحة رياضية عربية تهدف إلى <b>تسهيل اكتشاف الأندية والملاعب والأنشطة الرياضية</b> حول العالم. نربط اللاعبين بالأندية المضيفة ليكتشفوا ثقافات كروية جديدة، ويتعرفوا على <b>الزيارات والبرامج التدريبية المتاحة</b> — من حصص لاماسيا في برشلونة إلى الانضباط البافاري في ميونخ وأجواء الكورفا سود في الدار البيضاء — كل ذلك بالعربية ومن مكان واحد.</p> 
-      <div class="kpis" id="aboutStats"></div> 
-    </div> 
-  </div> 
- 
-  <div class="section"> 
-    <div class="section-head reveal"><div><span class="idx">ماذا نقدم</span><h2>🎯 خدمات المنصة</h2></div></div> 
-    <div class="grid activities reveal"> 
-      <div class="activity-card"><div class="activity-ic">🌍</div><div><b>اكتشاف الأندية</b><br><small style="color:var(--muted)">استعرض أندية 9 دول وصّفها حسب الدولة والمدينة والملعب.</small></div></div> 
-      <div class="activity-card"><div class="activity-ic">📝</div><div><b>طلبات زيارة منظمة</b><br><small style="color:var(--muted)">اختر الأنشطة والتواريخ وأرسل طلبك وتابع حالته لحظة بلحظة.</small></div></div> 
-      <div class="activity-card"><div class="activity-ic">📅</div><div><b>جداول تدريبية</b><br><small style="color:var(--muted)">استلم جدول زيارتك بالمواعيد والمواقع بعد موافقة النادي.</small></div></div> 
-      <div class="activity-card"><div class="activity-ic">🤝</div><div><b>تبادل الخبرات</b><br><small style="color:var(--muted)">تواصل رياضي وثقافي بين اللاعبين والأندية حول العالم.</small></div></div> 
-    </div> 
-  </div> 
- 
-  <div class="section"> 
-    <div class="cta-band reveal"> 
-      <div class="ph" id="ctaPh"></div> 
-      <div class="cta-in"> 
-        <span class="eyebrow" style="background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3);color:#fff">انضم إلينا</span> 
-        <h2>جاهز تبدأ رحلتك الكروية؟</h2> 
-        <p>تصفح الأندية المشاركة وقدّم أول طلب زيارة اليوم.</p> 
-        <div style="display:flex;gap:10px;flex-wrap:wrap"> 
-          <a class="btn btn-light" href="index.html">🏠 العودة إلى الصفحة الرئيسية</a> 
-          <a class="btn btn-accent" href="clubs.html">استعرض الأندية 🏟️</a> 
-        </div> 
-      </div> 
-    </div> 
-  </div> 
-</main> 
-<footer id="siteFooter"></footer><div id="toasts"></div> 
-<script src="js/seed.js"></script><script src="js/store.js"></script><script src="js/app.js"></script> 
-<script> 
-renderChrome("about"); 
-(function(){ 
-  document.getElementById("pagePh").innerHTML = ph(uimg(HERO_IMG, 1600), "🏟️", "ملاعب العالم"); 
-  document.getElementById("ctaPh").innerHTML = ph(uimg(window.CLUB_IMGS["c-barca"], 1400), "⚽", "أجواء الملاعب"); 
-  const db = DB.all(); 
-  document.getElementById("aboutStats").innerHTML = ` 
-    <div class="kpi"><small>🏟️ أندية مضيفة</small><b>${db.clubs.length}</b></div> 
-    <div class="kpi"><small>🌍 دول</small><b>${[...new Set(DB.getClubs().map(c=>c.country))].length}</b></div> 
-    <div class="kpi"><small>🎯 أنشطة متاحة</small><b>${db.clubs.reduce((n,c)=>n+c.activities.length,0)}</b></div>`; 
-})(); 
-</script> 
-</body> 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>من نحن | PlayPass</title>
+<meta name="description" content="تعرف على PlayPass — منصة السياحة الرياضية التي تسهل اكتشاف الأندية والملاعب والأنشطة الرياضية حول العالم للاعبين والزوار على حد سواء.">
+<link rel="stylesheet" href="css/style.css">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0a1a33">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+</head>
+<body>
+<a class="skip-link" href="#main">تخطَّ إلى المحتوى</a>
+<header class="site-header" id="siteHeader"></header>
+<main class="container" id="main">
+  <section class="page-hero reveal">
+    <div class="ph" id="pagePh"></div>
+    <div class="in"><span class="eyebrow" style="background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3);color:#fff">قصتنا</span>
+      <h1>ℹ️ من نحن</h1><p>PlayPass — جسرك العربي إلى ملاعب العالم</p></div>
+  </section>
+
+  <div class="section">
+    <div class="panel reveal">
+      <h3>⚽ ما هي PlayPass؟</h3>
+      <p class="lead">PlayPass منصة سياحة رياضية عربية تهدف إلى <b>تسهيل اكتشاف الأندية والملاعب والأنشطة الرياضية</b> حول العالم — <b>للاعبين والزوار على حد سواء</b>. نربط اللاعبين والمشجعين بالأندية المضيفة ليكتشفوا ثقافات كروية جديدة، ويتعرفوا على <b>الزيارات والبرامج التدريبية المتاحة</b> — من حصص لاماسيا في برشلونة إلى الانضباط البافاري في ميونخ وأجواء الكورفا سود في الدار البيضاء — كل ذلك بالعربية ومن مكان واحد.</p>
+      <p class="lead" style="margin-top:12px">سواء كنت <b>لاعباً</b> تبحث عن تدريب احترافي، أو <b>زائراً عادياً</b> (مشجع، سائح، أو إنسان يحب الكرة) — PlayPass يفتح لك أبواب أشهر الملاعب حول العالم. نحن لا نميز بين "لاعب" و "زائر": <b>كل شخص يمكنه تقديم طلب زيارة</b>، متابعة حالته، والاطلاع على جدول الزيارة بعد الموافقة.</p>
+      <div class="kpis" id="aboutStats"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head reveal"><div><span class="idx">ماذا نقدم</span><h2>🎯 خدمات المنصة</h2></div></div>
+    <div class="grid activities reveal">
+      <div class="activity-card"><div class="activity-ic">🌍</div><div><b>اكتشاف الأندية</b><br><small style="color:var(--muted)">استعرض أندية 9 دول وصّفها حسب الدولة والمدينة والملعب.</small></div></div>
+      <div class="activity-card"><div class="activity-ic">🎟️</div><div><b>زيارات للجميع</b><br><small style="color:var(--muted)">لاعب أو زائر — كل شخص يمكنه تقديم طلب زيارة واختيار الأنشطة (تدريب، جولات، حفلات، سياحة).</small></div></div>
+      <div class="activity-card"><div class="activity-ic">📝</div><div><b>طلبات زيارة منظمة</b><br><small style="color:var(--muted)">اختر الأنشطة والتواريخ وأرسل طلبك وتابع حالته لحظة بلحظة.</small></div></div>
+      <div class="activity-card"><div class="activity-ic">📅</div><div><b>جداول تدريبية</b><br><small style="color:var(--muted)">استلم جدول زيارتك بالمواعيد والمواقع بعد موافقة النادي.</small></div></div>
+      <div class="activity-card"><div class="activity-ic">🤝</div><div><b>تبادل الخبرات</b><br><small style="color:var(--muted)">تواصل رياضي وثقافي بين اللاعبين والأندية والزوار حول العالم.</small></div></div>
+      <div class="activity-card"><div class="activity-ic">🗺️</div><div><b>سياحة وترفيه</b><br><small style="color:var(--muted)">حفلات، جولات سياحية، تجارب طعام أصلي — أندية تقدم تجارب beyond Football.</small></div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="cta-band reveal">
+      <div class="ph" id="ctaPh"></div>
+      <div class="cta-in">
+        <span class="eyebrow" style="background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3);color:#fff">انضم إلينا</span>
+        <h2>جاهز تبدأ رحلتك الكروية؟</h2>
+        <p>تصفح الأندية المشاركة وقدّم أول طلب زيارة اليوم — بغض النظر عما إذا كنت لاعباً أو زائراً.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a class="btn btn-light" href="index.html">🏠 العودة إلى الصفحة الرئيسية</a>
+          <a class="btn btn-accent" href="clubs.html">استعرض الأندية 🏟️</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<footer id="siteFooter"></footer><div id="toasts"></div>
+<script src="js/seed.js"></script><script src="js/store.js"></script><script src="js/app.js"></script>
+<script>
+renderChrome("about");
+(function(){
+  document.getElementById("pagePh").innerHTML = ph(uimg(HERO_IMG, 1600), "🏟️", "ملاعب العالم");
+  document.getElementById("ctaPh").innerHTML = ph(uimg(window.CLUB_IMGS["c-barca"], 1400), "⚽", "أجواء الملاعب");
+  const db = DB.all();
+  document.getElementById("aboutStats").innerHTML = `
+    <div class="kpi"><small>🏟️ أندية مضيفة</small><b>${db.clubs.length}</b></div>
+    <div class="kpi"><small>🌍 دول</small><b>${[...new Set(db.clubs.map(c=>c.country))].length}</b></div>
+    <div class="kpi"><small>🎯 أنشطة متاحة</small><b>${db.clubs.reduce((n,c)=>n+c.activities.length,0)}</b></div>`;
+})();
+</script>
+</body>
 </html>
