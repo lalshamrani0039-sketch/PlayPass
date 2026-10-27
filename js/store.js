@@ -1,66 +1,66 @@
-/* PlayPass store — طبقة بيانات قابلة للتبديل مع API حقيقي مستقبلاً.
-   حالياً: محاكاة قاعدة بيانات عبر localStorage (وضع تجريبي موثّق).
-   للربط الخلفي: استبدل دوال DB.* بنداءات fetch إلى /api/... دون تغيير باقي الكود. */
-(function(){
-  const KEY = "playpass_db_v1";
-  const uid = (p)=> p + "-" + Math.random().toString(36).slice(2,7) + Date.now().toString(36).slice(-3);
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>استعراض الأندية | PlayPass</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">تخطَّ إلى المحتوى</a>
+<header class="site-header" id="siteHeader"></header>
+<main class="container" id="main">
+  <div class="section">
+    <div class="section-head"><div><h2>🏟️ الأندية الرياضية</h2><p>تصفَّ حسب الدولة أو ابحث بالاسم</p></div></div>
+    <div class="filters">
+      <select id="fCountry" onchange="render()" aria-label="تصفية حسب الدولة"><option value="">كل الدول 🌍</option></select>
+      <input id="fSearch" placeholder="🔎 ابحث عن نادٍ..." oninput="render()" aria-label="بحث">
+    </div>
+    <div class="grid clubs" id="grid"></div>
+    <p id="empty" style="display:none;color:var(--muted)">لا توجد أندية مطابقة — جرّب تصفية أخرى.</p>
+  </div>
+</main>
+<footer id="siteFooter"></footer><div id="toasts"></div>
+<script>
+const CLUBS = [
+  { id:"c-hilal", name:"نادي الهلال", country:"السعودية", flag:"🇸🇦", city:"الرياض", color1:"#0b2447", color2:"#1a6fd4", emoji:"🌙", stadium:"المملكة أرينا", capacity:26000, founded:1957, activities:["تدريب كرة قدم جماعي","تدريب لياقة بدنية","ورشة تكتيكية","جولة في الملعب والمتحف"] },
+  { id:"c-barca", name:"نادي برشلونة", country:"إسبانيا", flag:"🇪🇸", city:"برشلونة", color1:"#a50044", color2:"#004d98", emoji:"🔵", stadium:"الكامب نو", capacity:99354, founded:1899, activities:["تدريب بأسلوب لاماسيا","تحليل أداء بالفيديو","جولة في الكامب نو","ورشة تغذية رياضية"] },
+  { id:"c-bayern", name:"بايرن ميونخ", country:"ألمانيا", flag:"🇩🇪", city:"ميونخ", color1:"#dc052d", color2:"#7a0019", emoji:"🔴", stadium:"أليانز أرينا", capacity:75000, founded:1900, activities:["تدريب بدني عالي الكثافة","ورشة تكتيكية","اختبارات قياس بدنية"] },
+  { id:"c-ahly", name:"النادي الأهلي", country:"مصر", flag:"🇪🇬", city:"القاهرة", color1:"#c8102e", color2:"#7a0019", emoji:"🦅", stadium:"استاد القاهرة", capacity:75000, founded:1907, activities:["تدريب كرة قدم جماعي","تدريب حراس المرمى","جولة في الجزيرة"] },
+  { id:"c-ajax", name:"أياكس أمستردام", country:"هولندا", flag:"🇳🇱", city:"أمستردام", color1:"#d2122e", color2:"#ffffff", emoji:"⚪", stadium:"يوهان كرويف أرينا", capacity:55500, founded:1900, activities:["تدريب المهارات الفردية","ورشة ذكاء تكتيكي","قياسات أداء"] },
+  { id:"c-sao", name:"نادي ساو باولو", country:"البرازيل", flag:"🇧🇷", city:"ساو باولو", color1:"#1493d1", color2:"#c8102e", emoji:"🇧🇷", stadium:"المورومبي", capacity:66795, founded:1930, activities:["كرة شاطئية وشوارع","تدريب مهارات السامبا","ورشة إيقاع وحركة"] },
+  { id:"c-tokyo", name:"طوكيو فيردي", country:"اليابان", flag:"🇯🇵", city:"طوكيو", color1:"#0a7a3d", color2:"#0b2447", emoji:"🟢", stadium:"أجينوموتو", capacity:49970, founded:1969, activities:["تدريب انضباطي صباحي","تحليل تقني بالذكاء الاصطناعي"] },
+  { id:"c-sydney", name:"نادي سيدني", country:"أستراليا", flag:"🇦🇺", city:"سيدني", color1:"#0ea5e9", color2:"#0b2447", emoji:"🌊", stadium:"أليانز سيدني", capacity:42500, founded:2004, activities:["تدريب لياقة هوائية","تدريب تكتيكي","جولة بحرية رياضية"] },
+  { id:"c-raja", name:"نادي الرجاء الرياضي", country:"المغرب", flag:"🇲🇦", city:"الدار البيضاء", color1:"#0a7a3d", color2:"#ffffff", emoji:"🦅", stadium:"دونور", capacity:67000, founded:1949, activities:["تدريب جماعي","جولة في مركب الوازيس","لقاء مع الجماهير"] },
+  { id:"c-galatasaray", name:"نادي غلطة سراي", country:"تركيا", flag:"🇹🇷", city:"إسطنبول", color1:"#ff0000", color2:"#ffffff", emoji:"🟡", stadium:"رامضان شكر", capacity:52000, founded:1905, activities:["تدريب كرة قدم جماعي","جولة في ملعب رامضان شكر","حفلات ونشاطات ترفيهية"] }
+];
 
-  function init(){
-    try{
-      if(!localStorage.getItem(KEY)){
-        localStorage.setItem(KEY, JSON.stringify(window.PLAYPASS_SEED));
-      }
-    }catch(e){ console.warn("storage unavailable", e); }
-  }
-  function read(){
-    init();
-    try{ return JSON.parse(localStorage.getItem(KEY)) || window.PLAYPASS_SEED; }
-    catch(e){ return window.PLAYPASS_SEED; }
-  }
-  function write(db){ try{ localStorage.setItem(KEY, JSON.stringify(db)); }catch(e){} }
+const sel = document.getElementById("fCountry");
+const countries = [...new Set(CLUBS.map(c => c.country.trim()))];
+countries.forEach(c => {
+  const o = document.createElement("option");
+  o.value = c;
+  o.textContent = c;
+  sel.appendChild(o);
+});
 
-  window.DB = {
-    all(){ return read(); },
-    reset(){ localStorage.removeItem(KEY); init(); return read(); },
-    clubs(){ return read().clubs; },
-    club(id){ return read().clubs.find(c=>c.id===id); },
-    countries(){ const s=[...new Set(read().clubs.map(c=>c.country))]; return s; },
-    requests(){ return read().requests; },
-    myRequests(pid){ return read().requests.filter(r=>r.playerId===pid).sort((a,b)=> b.createdAt.localeCompare(a.createdAt)); },
-    clubRequests(cid){ return read().requests.filter(r=>r.clubId===cid).sort((a,b)=> b.createdAt.localeCompare(a.createdAt)); },
-    getRequest(id){ return read().requests.find(r=>r.id===id); },
-    createRequest(data){
-      const db = read();
-      const r = Object.assign({ id: uid("r"), status:"pending", createdAt: new Date().toISOString().slice(0,10) }, data);
-      db.requests.push(r); write(db); return r;
-    },
-    setStatus(id, status){
-      const db = read(); const r = db.requests.find(x=>x.id===id);
-      if(r){ r.status = status; write(db); } return r;
-    },
-    scheduleFor(requestId){ return read().schedules.filter(s=>s.requestId===requestId); },
-    addSlot(slot){
-      const db = read();
-      const s = Object.assign({ id: uid("s") }, slot);
-      db.schedules.push(s); write(db); return s;
-    },
-    removeSlot(id){
-      const db = read(); db.schedules = db.schedules.filter(s=>s.id!==id); write(db);
-    },
-    users(){ return read().users; },
-    addUser(u){
-      const db = read();
-      const user = Object.assign({ id: uid("u") }, u);
-      db.users.push(user); write(db); return user;
-    },
-    updateClub(id, patch){
-      const db = read(); const c = db.clubs.find(x=>x.id===id);
-      if(c){ Object.assign(c, patch); write(db); } return c;
-    },
-    addClub(c){
-      const db = read();
-      const club = Object.assign({ id: uid("c"), flag:"🏟️", emoji:"⚽", color1:"#0e7c5b", color2:"#0b2447", capacity:10000, founded:new Date().getFullYear(), city:"", stadium:"", activities:[] }, c);
-      db.clubs.push(club); write(db); return club;
-    }
-  };
-})();
+function render(){
+  const co = sel.value.trim();
+  const q = document.getElementById("fSearch").value.trim();
+  let list = CLUBS.slice();
+  if(co) list = list.filter(c => c.country.trim() === co);
+  if(q) list = list.filter(c => c.name.includes(q) || c.city.includes(q));
+  document.getElementById("grid").innerHTML = list.map(c => `
+    <article class="card">
+      <div class="card-cover" style="background:linear-gradient(135deg,${c.color1},${c.color2})"><span class="flag">${c.flag}</span>${c.emoji}</div>
+      <div class="card-body"><h3>${c.name}</h3>
+        <div class="meta"><span class="tag">📍 ${c.country} — ${c.city}</span><span class="tag green">${c.activities.length} أنشطة</span></div>
+        <small style="color:var(--muted)">تأسس ${c.founded} • سعة الملعب ${Number(c.capacity).toLocaleString("ar")} متفرج</small>
+      </div>
+      <div class="card-actions"><a class="btn btn-primary btn-sm" href="club-details.html?id=${c.id}">عرض التفاصيل</a></div>
+    </article>`).join("");
+  document.getElementById("empty").style.display = list.length ? "none" : "";
+}
+render();
+</script>
+</body>
+</html>
