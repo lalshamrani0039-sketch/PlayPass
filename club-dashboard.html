@@ -2,65 +2,209 @@
 <html lang="ar" dir="rtl" data-theme="light">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>استعراض الأندية | PlayPass</title>
+<title>لوحة تحكم النادي | PlayPass</title>
 <link rel="stylesheet" href="css/style.css">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0a1a33">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 </head>
 <body>
 <a class="skip-link" href="#main">تخطَّ إلى المحتوى</a>
 <header class="site-header" id="siteHeader"></header>
 <main class="container" id="main">
   <div class="section">
-    <div class="section-head"><div><h2>🏟️ الأندية الرياضية</h2><p>تصفَّ حسب الدولة أو ابحث بالاسم</p></div></div>
-    <div class="filters">
-      <select id="fCountry" onchange="render()" aria-label="تصفية حسب الدولة"><option value="">كل الدول 🌍</option></select>
-      <input id="fSearch" placeholder="🔎 ابحث عن نادٍ..." oninput="render()" aria-label="بحث">
+    <div class="section-head"><div><h2>🛠️ لوحة تحكم النادي</h2><p>إدارة بيانات النادي، الأنشطة، طلبات الزيارة والجداول.</p></div></div>
+
+    <!-- بيانات النادي -->
+    <div class="panel reveal">
+      <h3>🏟️ بيانات النادي</h3>
+      <div class="field"><label>اسم النادي</label><input id="clubName" type="text"></div>
+      <div class="field"><label>الدولة</label><input id="clubCountry" type="text"></div>
+      <div class="field"><label>المدينة</label><input id="clubCity" type="text"></div>
+      <div class="field"><label>الملعب</label><input id="clubStadium" type="text"></div>
+      <div class="field"><label>الشعار (إيموجي)</label><input id="clubEmoji" type="text" placeholder="⚽"></div>
+      <div class="field"><label>وصف النادي</label><textarea id="clubDesc" rows="3"></textarea></div>
+      <button class="btn btn-primary" onclick="saveClub()">💾 حفظ البيانات</button>
     </div>
-    <div class="grid clubs" id="grid"></div>
-    <p id="empty" style="display:none;color:var(--muted)">لا توجد أندية مطابقة — جرّب تصفية أخرى.</p>
+
+    <!-- الأنشطة -->
+    <div class="panel reveal">
+      <h3>🎯 الأنشطة المتاحة للزوار</h3>
+      <div id="activitiesList" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px"></div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <input id="newAct" type="text" placeholder="نشاط جديد..." style="flex:1;padding:10px;border:1.5px solid var(--border);border-radius:11px;font-family:inherit">
+        <button class="btn btn-accent" onclick="addAct()">إضافة</button>
+      </div>
+    </div>
+
+    <!-- الطلبات -->
+    <div class="panel reveal">
+      <h3>📥 طلبات الزيارة الواردة</h3>
+      <div class="table-wrap"><table><thead><tr><th>اللاعب</th><th>الفترة</th><th>الأنشطة</th><th>الحالة</th><th>إجراء</th></tr></thead><tbody id="reqTableBody"></tbody></table></div>
+    </div>
+
+    <!-- الجداول -->
+    <div class="panel reveal">
+      <h3>📅 إعداد الجداول</h3>
+      <div class="field"><label>اختر الطلب المقبول</label><select id="selReq" onchange="renderSlots()"></select></div>
+      <div id="slotList" style="display:grid;gap:8px;margin-bottom:12px"></div>
+      <div class="field"><label>اليوم</label><input id="nDay" placeholder="مثال: اليوم 1 — 10 نوفمبر"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="field"><label>الوقت</label><input id="nTime" placeholder="09:00 - 11:00"></div>
+        <div class="field"><label>الموقع</label><input id="nPlace" placeholder="الملعب الرئيسي"></div>
+      </div>
+      <div class="field"><label>النشاط / العنوان</label><input id="nTitle" placeholder="تدريب صباحي"></div>
+      <button class="btn btn-primary" onclick="addSlot()">إضافة موعد</button>
+    </div>
   </div>
 </main>
 <footer id="siteFooter"></footer><div id="toasts"></div>
+<script src="js/seed.js"></script><script src="js/store.js"></script><script src="js/app.js"></script>
 <script>
-const CLUBS = [
-  { id:"c-hilal", name:"نادي الهلال", country:"السعودية", flag:"🇸🇦", city:"الرياض", color1:"#0b2447", color2:"#1a6fd4", emoji:"🌙", stadium:"المملكة أرينا", capacity:26000, founded:1957, activities:["تدريب كرة قدم جماعي","تدريب لياقة بدنية","ورشة تكتيكية","جولة في الملعب والمتحف"] },
-  { id:"c-barca", name:"نادي برشلونة", country:"إسبانيا", flag:"🇪🇸", city:"برشلونة", color1:"#a50044", color2:"#004d98", emoji:"🔵", stadium:"الكامب نو", capacity:99354, founded:1899, activities:["تدريب بأسلوب لاماسيا","تحليل أداء بالفيديو","جولة في الكامب نو","ورشة تغذية رياضية"] },
-  { id:"c-bayern", name:"بايرن ميونخ", country:"ألمانيا", flag:"🇩🇪", city:"ميونخ", color1:"#dc052d", color2:"#7a0019", emoji:"🔴", stadium:"أليانز أرينا", capacity:75000, founded:1900, activities:["تدريب بدني عالي الكثافة","ورشة تكتيكية","اختبارات قياس بدنية"] },
-  { id:"c-ahly", name:"النادي الأهلي", country:"مصر", flag:"🇪🇬", city:"القاهرة", color1:"#c8102e", color2:"#7a0019", emoji:"🦅", stadium:"استاد القاهرة", capacity:75000, founded:1907, activities:["تدريب كرة قدم جماعي","تدريب حراس المرمى","جولة في الجزيرة"] },
-  { id:"c-ajax", name:"أياكس أمستردام", country:"هولندا", flag:"🇳🇱", city:"أمستردام", color1:"#d2122e", color2:"#ffffff", emoji:"⚪", stadium:"يوهان كرويف أرينا", capacity:55500, founded:1900, activities:["تدريب المهارات الفردية","ورشة ذكاء تكتيكي","قياسات أداء"] },
-  { id:"c-sao", name:"نادي ساو باولو", country:"البرازيل", flag:"🇧🇷", city:"ساو باولو", color1:"#1493d1", color2:"#c8102e", emoji:"🇧🇷", stadium:"المورومبي", capacity:66795, founded:1930, activities:["كرة شاطئية وشوارع","تدريب مهارات السامبا","ورشة إيقاع وحركة"] },
-  { id:"c-tokyo", name:"طوكيو فيردي", country:"اليابان", flag:"🇯🇵", city:"طوكيو", color1:"#0a7a3d", color2:"#0b2447", emoji:"🟢", stadium:"أجينوموتو", capacity:49970, founded:1969, activities:["تدريب انضباطي صباحي","تحليل تقني بالذكاء الاصطناعي"] },
-  { id:"c-sydney", name:"نادي سيدني", country:"أستراليا", flag:"🇦🇺", city:"سيدني", color1:"#0ea5e9", color2:"#0b2447", emoji:"🌊", stadium:"أليانز سيدني", capacity:42500, founded:2004, activities:["تدريب لياقة هوائية","تدريب تكتيكي","جولة بحرية رياضية"] },
-  { id:"c-raja", name:"نادي الرجاء الرياضي", country:"المغرب", flag:"🇲🇦", city:"الدار البيضاء", color1:"#0a7a3d", color2:"#ffffff", emoji:"🦅", stadium:"دونور", capacity:67000, founded:1949, activities:["تدريب جماعي","جولة في مركب الوازيس","لقاء مع الجماهير"] },
-  { id:"c-galatasaray", name:"نادي غلطة سراي", country:"تركيا", flag:"🇹🇷", city:"إسطنبول", color1:"#ff0000", color2:"#ffffff", emoji:"🟡", stadium:"رامضان شكر", capacity:52000, founded:1905, activities:["تدريب كرة قدم جماعي","جولة في ملعب رامضان شكر","حفلات ونشاطات ترفيهية"] }
-];
+renderChrome("club");
 
-const sel = document.getElementById("fCountry");
-const countries = [...new Set(CLUBS.map(c => c.country.trim()))];
-countries.forEach(c => {
-  const o = document.createElement("option");
-  o.value = c;
-  o.textContent = c;
-  sel.appendChild(o);
-});
+const s = requireRole(["club"], "login.html");
+if(!s || !s.clubId) location.href = "login.html";
 
-function render(){
-  const co = sel.value.trim();
-  const q = document.getElementById("fSearch").value.trim();
-  let list = CLUBS.slice();
-  if(co) list = list.filter(c => c.country.trim() === co);
-  if(q) list = list.filter(c => c.name.includes(q) || c.city.includes(q));
-  document.getElementById("grid").innerHTML = list.map(c => `
-    <article class="card">
-      <div class="card-cover" style="background:linear-gradient(135deg,${c.color1},${c.color2})"><span class="flag">${c.flag}</span>${c.emoji}</div>
-      <div class="card-body"><h3>${c.name}</h3>
-        <div class="meta"><span class="tag">📍 ${c.country} — ${c.city}</span><span class="tag green">${c.activities.length} أنشطة</span></div>
-        <small style="color:var(--muted)">تأسس ${c.founded} • سعة الملعب ${Number(c.capacity).toLocaleString("ar")} متفرج</small>
-      </div>
-      <div class="card-actions"><a class="btn btn-primary btn-sm" href="club-details.html?id=${c.id}">عرض التفاصيل</a></div>
-    </article>`).join("");
-  document.getElementById("empty").style.display = list.length ? "none" : "";
+const club = DB.getClub(s.clubId);
+if(!club) location.href = "login.html";
+
+// تعبئة النموذج
+document.getElementById("clubName").value = club.name || "";
+document.getElementById("clubCountry").value = club.country || "";
+document.getElementById("clubCity").value = club.city || "";
+document.getElementById("clubStadium").value = club.stadium || "";
+document.getElementById("clubEmoji").value = club.emoji || "⚽";
+document.getElementById("clubDesc").value = club.desc || "";
+
+// حفظ بيانات النادي
+function saveClub(){
+  const patch = {
+    name: document.getElementById("clubName").value.trim(),
+    country: document.getElementById("clubCountry").value.trim(),
+    city: document.getElementById("clubCity").value.trim(),
+    stadium: document.getElementById("clubStadium").value.trim(),
+    emoji: document.getElementById("clubEmoji").value.trim() || "⚽",
+    desc: document.getElementById("clubDesc").value.trim()
+  };
+  DB.updateClub(s.clubId, patch);
+  toast("تم حفظ البيانات ✅");
+  renderClubInfo();
 }
-render();
+
+// عرض الأنشطة
+function renderActs(){
+  const list = document.getElementById("activitiesList");
+  list.innerHTML = (club.activities||[]).map((x,i)=>`
+    <div class="card">
+      <div class="card-body"><b>${esc(x)}</b><button class="btn btn-danger btn-sm" onclick="delAct(${i})">✕</button></div>
+    </div>
+  `).join("");
+}
+renderActs();
+
+function addAct(){
+  const v = document.getElementById("newAct").value.trim();
+  if(!v) return;
+  const c = DB.getClub(s.clubId);
+  c.activities.push(v);
+  DB.updateClub(s.clubId, {activities: c.activities});
+  renderActs();
+  document.getElementById("newAct").value = "";
+}
+
+function delAct(i){
+  const c = DB.getClub(s.clubId);
+  c.activities.splice(i,1);
+  DB.updateClub(s.clubId, {activities: c.activities});
+  renderActs();
+  renderReqs();
+}
+
+// عرض الطلبات
+function renderReqs(){
+  const reqs = DB.getClubRequests(s.clubId);
+  const tbody = document.getElementById("reqTableBody");
+  tbody.innerHTML = reqs.map(r => {
+    const p = DB.getUsers().find(u => u.id === r.playerId);
+    const pname = p ? p.name : "لاعب";
+    return `<tr>
+      <td><b>${esc(p.name)}</b><br><small style="color:var(--muted)">${esc(r.createdAt)}</small></td>
+      <td><small>${esc(r.start)} ← ${esc(r.end)}</small></td>
+      <td><small>${r.activities.map(esc).join("، ")}</small></td>
+      <td>${statusLabel(r.status)}</td>
+      <td style="white-space:nowrap">
+        ${r.status==="pending" ? `
+          <button class="btn btn-primary btn-sm" onclick="decide('${r.id}','approved')">قبول</button>
+          <button class="btn btn-danger btn-sm" onclick="decide('${r.id}','rejected')">رفض</button>
+        ` : `<small style="color:var(--muted)">تم البت</small>`}
+      </td>
+    </tr>`;
+  }).join("");
+}
+
+// عرض الجداول
+function renderSlots(){
+  const rid = document.getElementById("selReq").value;
+  if(!rid) return;
+  const slots = DB.getScheduleFor(rid);
+  const list = document.getElementById("slotList");
+  list.innerHTML = slots.map(x => `
+    <div class="slot">
+      <div class="time">${esc(x.time)}</div>
+      <div style="flex:1"><b>${esc(x.title)}</b><br><small style="color:var(--muted)">${esc(x.day)} • 📍 ${esc(x.place)}</small></div>
+      <button class="btn btn-danger btn-sm" onclick="delSlot('${x.id}')">✕</button>
+    </div>
+  `).join("");
+}
+
+function addSlot(){
+  const requestId = document.getElementById("selReq").value;
+  const day = document.getElementById("nDay").value.trim();
+  const time = document.getElementById("nTime").value.trim();
+  const place = document.getElementById("nPlace").value.trim();
+  const title = document.getElementById("nTitle").value.trim();
+  if(!day || !time || !title){ toast("أكمل اليوم والوقت والنشاط"); return; }
+  DB.addSlot({ requestId, day, time, place: place||"—", title });
+  renderSlots();
+  document.getElementById("nDay").value = "";
+  document.getElementById("nTime").value = "";
+  document.getElementById("nPlace").value = "";
+  document.getElementById("nTitle").value = "";
+}
+
+function delSlot(id){
+  DB.removeSlot(id);
+  renderSlots();
+}
+
+// تحديث قائمة الطلبات المقبولة
+function updateSelReq(){
+  const selReq = document.getElementById("selReq");
+  const current = selReq.value;
+  selReq.innerHTML = "";
+  const accepted = DB.getRequests().filter(r => r.clubId === s.clubId && r.status === "approved");
+  accepted.forEach(r => {
+    const o = document.createElement("option");
+    o.value = r.id;
+    o.textContent = `${esc(r.start)} ← ${esc(r.end)}`;
+    if(o.value === current) o.selected = true;
+    selReq.appendChild(o);
+  });
+}
+
+// تهيئة الصفحة
+renderReqs();
+renderSlots();
+updateSelReq();
+
+// تحديث القائمة تلقائياً
+setInterval(() => {
+  renderReqs();
+  updateSelReq();
+  renderSlots();
+}, 5000);
 </script>
 </body>
 </html>
