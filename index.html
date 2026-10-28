@@ -5,53 +5,43 @@
 <title>PlayPass | السياحة الرياضية — تدرّب مع أندية العالم</title>
 <meta name="description" content="منصة عربية تربط اللاعبين بالأندية العالمية: استعرض الأندية، قدّم طلب زيارة، وتابع جدولك التدريبي.">
 <link rel="stylesheet" href="css/style.css">
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#0a1a33">
-<link rel="icon" type="image/svg+xml" href="icon.svg">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 </head>
 <body>
 <a class="skip-link" href="#main">تخطَّ إلى المحتوى</a>
 <header class="site-header" id="siteHeader"></header>
 <main class="container" id="main">
-
-  <!-- 1) Hero: stadium imagery + marketing headline -->
   <section class="hero-luxe reveal">
     <div class="ph" id="heroPh"></div>
     <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end">
       <div class="hero-inner">
         <span class="eyebrow" style="background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3);color:#fff">⚽ 🏟️ ✈️ السياحة الرياضية</span>
         <h1>سافر.. تدرّب.. وعِش شغف الكرة <em>مع أندية العالم</em></h1>
-        <p>PlayPass تفتح لك أبواب أشهر الملاعب: اختر ناديك حسب الدولة، قدّم طلب زيارة بالعربية، وتابع الموافقة وجدول التدريب — رحلة كروية من التنظيم إلى صافرة البداية.</p>
+        <p>PlayPass تفتح لك أبواب أشهر الملاعب: اختر ناديك حسب الدولة، قدّم طلب زيارة بالعربية، وتابع الموافقة وجدول التدريب — كل ذلك بالعربية ومن مكان واحد.</p>
         <div class="hero-cta">
-          <a class="btn btn-primary" href="clubs.html">استكشف الأندية 🏟️</a>
+          <a class="btn btn-accent" href="clubs.html">استكشف الأندية 🏟️</a>
           <a class="btn btn-light" href="login.html" id="ctaBtn">ابدأ كـ لاعب ⚽</a>
         </div>
-        <div class="hero-meta"><span class="pill">🇸🇦 🇪🇸 🇩🇪 🇪🇬 🇳🇱 🇧🇷 🇯🇵 🇦🇺 🇲🇦</span><span class="pill">عربية كاملة RTL + وضع ليلي 🌙</span></div>
+        <div class="hero-meta"><span class="pill">🇸🇦 🇪🇸 🇩🇪 🇪🇬 🇳🇱 🇧🇷 🇯🇵 🇦🇺 🇲🇦</span><span class="pill">دعم كامل RTL + وضع ليلي</span></div>
       </div>
       <div class="hero-stats" id="heroStats"></div>
     </div>
   </section>
 
-  <!-- 2) Explore clubs by country -->
   <section class="section">
-    <div class="section-head reveal"><div><span class="idx">٠١ — الوجهات</span><h2>🌍 استكشف الأندية حسب الدولة</h2><p>اختر وجهتك.. وستُرشَّح لك أنديتها مباشرة</p></div><a class="btn btn-ghost btn-sm" href="clubs.html">كل الأندية ←</a></div>
+    <div class="section-head reveal"><div><span class="idx">٠١ — الوجهات</span><h2>🌍 استكشف الأندية حسب الدولة</h2><p>اختر دولة لتصفية الأندية مباشرة</p></div><a class="btn btn-ghost btn-sm" href="clubs.html">كل الأندية ←</a></div>
     <div class="country-rail reveal" id="countryGrid"></div>
   </section>
 
-  <!-- 3) Featured destinations & experiences -->
   <section class="section">
-    <div class="section-head reveal"><div><span class="idx">٠٢ — تجارب مميزة</span><h2>✨ وجهات وتجارب لا تُنسى</h2><p>مختارات تحريرية من قلب الملاعب العالمية</p></div></div>
+    <div class="section-head reveal"><div><span class="idx">٠٢ — أنشطة مميزة</span><h2>✨ وجهات وتجارب لا تُنسى</h2><p>مختارات تحريرية من قلب الملاعب العالمية</p></div></div>
     <div class="dest-rail reveal" id="destRail"></div>
   </section>
 
-  <!-- 4) Professional clubs showcase -->
   <section class="section">
     <div class="section-head reveal"><div><span class="idx">٠٣ — الأندية المشاركة</span><h2>🏟️ نوادٍ تفتح ملاعبها لك</h2><p>تدرّب حيث يصنع النجوم.. تعرّف على مضيفيك</p></div><a class="btn btn-ghost btn-sm" href="clubs.html">عرض الكل ←</a></div>
     <div id="clubGrid"></div>
   </section>
 
-  <!-- 5) How visit requests work -->
   <section class="section">
     <div class="section-head reveal"><div><span class="idx">٠٤ — كيف تحجز رحلتك؟</span><h2>📝 طريقك إلى الملعب في 3 خطوات</h2><p>آلية واضحة من التقديم حتى صافرة البداية</p></div><a class="btn btn-ghost btn-sm" href="my-requests.html">تابع طلباتي ←</a></div>
     <div class="steps reveal">
@@ -61,13 +51,11 @@
     </div>
   </section>
 
-  <!-- Activities -->
   <section class="section">
     <div class="section-head reveal"><div><span class="idx">٠٥ — ماذا ستجرّب؟</span><h2>🎯 أنشطة رياضية داخل الأندية</h2><p>برامج صُممت لتطوير مستواك وشغفك</p></div></div>
     <div class="grid activities reveal" id="actGrid"></div>
   </section>
 
-  <!-- 6) CTA -->
   <section class="section">
     <div class="cta-band reveal">
       <div class="ph" id="ctaPh"></div>
@@ -82,7 +70,6 @@
       </div>
     </div>
   </section>
-
 </main>
 <footer id="siteFooter"></footer><div id="toasts"></div>
 <script src="js/seed.js"></script><script src="js/store.js"></script><script src="js/app.js"></script>
@@ -90,46 +77,29 @@
 renderChrome("home");
 (function(){
   const db = DB.all();
-
-  // Hero + CTA imagery (Unsplash, free to use) with designed fallback
   document.getElementById("heroPh").innerHTML = ph(uimg(HERO_IMG, 1800), "🏟️", "ملعب كرة قدم احترافي");
-  document.getElementById("ctaPh").innerHTML = ph(uimg(window.CLUB_IMGS["c-hilal"], 1400), "⚽", "أجواء التدريب");
-
+  document.getElementById("ctaPh").innerHTML = ph(uimg(window.CLUB_IMGS["c-barca"], 1400), "⚽", "أجواء الملاعب");
   document.getElementById("heroStats").innerHTML = `
     <div><b>${db.clubs.length}</b><small>أندية حول العالم</small></div>
-    <div><b>${DB.countries().length}</b><small>دول مضيفة</small></div>
+    <div><b>${[...new Set(db.clubs.map(c=>c.country))].length}</b><small>دول مضيفة</small></div>
     <div><b>${db.requests.length * 37 + 120}</b><small>زيارة ناجحة</small></div>`;
-
   const s = session();
   if(s && s.role==="player") document.getElementById("ctaBtn").outerHTML = '<a class="btn btn-light" href="my-requests.html">تابع طلباتي 📋</a>';
 
-  // 2) Countries
   const counts = {};
   db.clubs.forEach(c=> counts[c.country] = (counts[c.country]||0)+1);
   const flagOf = c => (db.clubs.find(x=>x.country===c)||{}).flag || "🏳️";
   document.getElementById("countryGrid").innerHTML = Object.keys(counts).map(c=>
     `<div class="country-card" onclick="location.href='clubs.html?country=${encodeURIComponent(c)}'"><div class="f">${flagOf(c)}</div><b>${esc(c)}</b><small>${counts[c]} أندية</small></div>`).join("");
 
-  // 3) Destinations rail (editorial picks, static content)
-  const dests = [
-    [window.CLUB_IMGS["c-barca"], "الكامب نو • إسبانيا 🇪🇸", "تدرب بأسلوب لاماسيا", "حصص الاستحواذ والتمرير حيث تخرّج ميسي وتشافي وإنييستا.", "🔵"],
-    [window.CLUB_IMGS["c-bayern"], "أليانز أرينا • ألمانيا 🇩🇪", "الانضباط البافاري", "برامج بدنية عالية الكثافة وقياسات احترافية بأحدث التقنيات.", "🔴"],
-    [window.CLUB_IMGS["c-sao"], "المورومبي • البرازيل 🇧🇷", "سامبا الكرة", "مهارات الشوارع وإيقاع السامبا في مهد أجمل كرة في العالم.", "🟢"],
-    [window.CLUB_IMGS["c-raja"], "دونور • المغرب 🇲🇦", "جحيم الكورفا سود", "عِش أجواء أشهر مدرجات إفريقيا وتدرب مع النسور الخضر.", "🦅"]
-  ];
-  document.getElementById("destRail").innerHTML = dests.map(d=>
-    `<div class="dest-card" onclick="location.href='clubs.html'"><div class="ph">${ph(uimg(d[0], 800), d[4], d[2])}</div>
-      <div class="dest-cap"><span class="k">${esc(d[1])}</span><h3>${esc(d[2])}</h3><p>${esc(d[3])}</p></div></div>`).join("");
-
-  // 4) Clubs showcase: editorial feature rows (same data + links, new skin)
-  document.getElementById("clubGrid").innerHTML = db.clubs.slice(0,3).map((c,i)=>`
-    <article class="feature reveal in">
-      <div class="ph">${ph(clubImg(c.id, 900), c.emoji, c.name)}<span class="flag" style="position:absolute;top:12px;left:14px;font-size:1.7rem;z-index:2">${c.flag}</span></div>
-      <div class="feature-body"><span class="no">نادي مميز — 0${i+1}</span><h3>${esc(c.name)}</h3>
-        <div class="meta"><span class="tag">📍 ${esc(c.country)} — ${esc(c.city)}</span><span class="tag green">🏟️ ${esc(c.stadium)}</span><span class="tag gold">${esc(c.activities.length)} أنشطة</span></div>
-        <p>${esc(c.desc)}</p>
-        <div><a class="btn btn-primary btn-sm" href="club-details.html?id=${c.id}">اكتشف النادي وقدّم طلبك ←</a></div>
+  document.getElementById("clubGrid").innerHTML = db.clubs.slice(0,6).map((c,i)=>
+    `<article class="card reveal in">
+      <div class="card-cover" style="background:linear-gradient(135deg,${c.color1},${c.color2})">${ph(clubImg(c.id, 700), c.emoji, c.name)}<span class="shade"></span><span class="flag">${c.flag}</span></div>
+      <div class="card-body"><h3>${esc(c.name)}</h3>
+        <div class="meta"><span class="tag">📍 ${esc(c.country)} — ${esc(c.city)}</span><span class="tag green">${c.activities.length} أنشطة</span></div>
+        <p style="margin:0;color:var(--muted);font-size:.9rem">${esc(c.desc.slice(0,90))}…</p>
       </div>
+      <div class="card-actions"><a class="btn btn-primary btn-sm" href="club-details.html?id=${c.id}">التفاصيل وطلب الزيارة</a></div>
     </article>`).join("");
 
   const acts = [
