@@ -15,7 +15,6 @@ body { margin: 0; font-family: 'Tajawal', system-ui, Arial, sans-serif; backgrou
 .brand-mark { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; color: #fff; font-size: 1.35rem; background: conic-gradient(from 210deg, #0e9f6e 0 40%, #0a1a33 40% 100%); }
 .wordmark { font-weight: 900; font-size: 1.3rem; letter-spacing: 0.2px; line-height: 1.15; color: #0e1b2c; direction: ltr; }
 .wordmark b { color: #0e9f6e; }
-.wordmark small { display: block; direction: rtl; font-size: 0.68rem; font-weight: 700; color: #5b6b7a; letter-spacing: 0; }
 .nav { display: flex; gap: 4px; align-items: center; }
 .nav a { text-decoration: none; padding: 9px 15px; border-radius: 999px; font-weight: 800; font-size: 0.93rem; color: #5b6b7a; transition: 0.2s; border: 1px solid transparent; }
 .nav a:hover { color: #0b7a55; background: #e2f4ec; }
@@ -41,7 +40,7 @@ body { margin: 0; font-family: 'Tajawal', system-ui, Arial, sans-serif; backgrou
 .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
 .card { background: #ffffff; border: 1px solid #e1e8e5; border-radius: 18px; box-shadow: 0 18px 45px rgba(10, 26, 51, 0.1); overflow: hidden; transition: transform 0.25s; display: flex; flex-direction: column; }
 .card:hover { transform: translateY(-5px); box-shadow: 0 18px 45px rgba(10, 26, 51, 0.15); }
-.card-cover { height: 190px; display: grid; place-items: center; font-size: 3.2rem; color: #fff; position: relative; overflow: hidden; }
+.card-cover { height: 190px; display: grid; place-items: center; font-size: 3.2rem; color: #fff; position: relative; overflow:hidden; }
 .card-body { padding: 18px; display: grid; gap: 9px; flex: 1; }
 .card-body h3 { margin: 0; font-size: 1.12rem; }
 .card-actions { padding: 0 18px 18px; display: flex; gap: 8px; flex-wrap: wrap; }
@@ -53,38 +52,12 @@ body { margin: 0; font-family: 'Tajawal', system-ui, Arial, sans-serif; backgrou
 .status.approved { background: #dcfce7; color: #166534; }
 .status.pending { background: #fef3c7; color: #92400e; }
 .status.rejected { background: #fee2e2; color: #991b1b; }
-.table-wrap { overflow-x: auto; border: 1px solid #e1e8e5; border-radius: 16px; background: var(--surface); }
-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-width: 640px; }
-th, td { padding: 13px 15px; text-align: right; border-bottom: 1px solid var(--border); }
-th { background: var(--navy); color: #fff; font-weight: 800; white-space: nowrap; font-size: 0.85rem; }
-tr:last-child td { border-bottom: 0; }
-tbody tr:hover td { background: color-mix(in srgb,var(--green-tint) 55%,transparent); }
-.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
-.tab { border: 1.5px solid var(--border); background: var(--surface); border-radius: 999px; padding: 9px 20px; font-family: inherit; font-weight: 800; cursor: pointer; color: var(--muted); font-size: 0.9rem; transition: 0.2s; }
-.tab:hover { border-color: var(--green); }
-.tab.active { background: var(--navy); color: #fff; border-color: var(--navy); }
-[data-theme="dark"] .tab.active { background: var(--green); border-color: var(--green); }
-.filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
-.filters select, .filters input { background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; padding: 11px 14px; font-family: inherit; color: var(--text); font-size: 0.95rem; }
-.table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); }
-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-width: 640px; }
-th, td { padding: 13px 15px; text-align: right; border-bottom: 1px solid var(--border); }
-th { background: var(--navy); color: #fff; font-weight: 800; white-space: nowrap; font-size: 0.85rem; }
-tr:last-child td { border-bottom: 0; }
-tbody tr:hover td { background: color-mix(in srgb,var(--green-tint) 55%,transparent); }
-.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
-.tab { border: 1.5px solid var(--border); background: var(--surface); border-radius: 999px; padding: 9px 20px; font-family: inherit; font-weight: 800; cursor: pointer; color: var(--muted); font-size: 0.9rem; transition: 0.2s; }
-.tab:hover { border-color: var(--green); }
-.tab.active { background: var(--navy); color: #fff; border-color: var(--navy); }
-[data-theme="dark"] .tab.active { background: var(--green); border-color: var(--green); }
-.filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
-.filters select, .filters input { background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; padding: 11px 14px; font-family: inherit; color: var(--text); font-size: 0.95rem; }
-footer { margin-top: 56px; border-top: 1px solid var(--border); background: var(--navy); color: #c8d4e2; padding: 34px 0; font-size: 0.9rem; }
+footer { margin-top: 56px; border-top: 1px solid #e1e8e5; background: #0a1a33; color: #c8d4e2; padding: 34px 0; font-size: 0.9rem; }
 footer b { color: #fff; }
 footer code { background: rgba(255,255,255,0.12); padding: 1px 7px; border-radius: 6px; color: #fff; font-size: 0.82rem; }
 .foot-grid { display: flex; justify-content: space-between; gap: 18px; flex-wrap: wrap; align-items: flex-start; }
 @media(max-width: 960px) { .container { padding-inline: 15px; } .section { margin: 38px 0; } th, td { padding: 10px; } .hero-stats > div { flex: 1 1 40%; } }
-@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } .reveal { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
 </head>
 <body>
@@ -114,7 +87,7 @@ footer code { background: rgba(255,255,255,0.12); padding: 1px 7px; border-radiu
 </header>
 
 <main class="container" id="main">
-  <!-- Hero -->
+  <!-- Hero Section -->
   <section class="hero-luxe reveal">
     <div class="hero-inner">
       <span class="eyebrow" style="background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3);color:#fff">⚽ 🏟️ ✈️ السياحة الرياضية</span>
@@ -127,25 +100,25 @@ footer code { background: rgba(255,255,255,0.12); padding: 1px 7px; border-radiu
     </div>
   </section>
 
-  <!-- Countries -->
+  <!-- Countries Section -->
   <section class="section">
     <div class="section-head reveal"><div><span class="idx">٠١ — الوجهات</span><h2>🌍 استكشف الأندية حسب الدولة</h2><p>اختر دولة لتصفية الأندية مباشرة</p></div><a class="btn btn-ghost btn-sm" href="clubs.html">كل الأندية ←</a></div>
     <div class="country-rail reveal" id="countryGrid"></div>
   </section>
 
-  <!-- Featured clubs -->
+  <!-- Featured Clubs -->
   <section class="section">
     <div class="section-head reveal"><div><span class="idx">⭐</span><h2>⭐ أندية مقترحة لك</h2><p>الأعلى تقييماً من تجارب اللاعبين</p></div><a class="btn btn-ghost btn-sm" href="clubs.html">عرض الكل ←</a></div>
     <div class="grid clubs" id="clubGrid"></div>
   </section>
 
-  <!-- Activities -->
+  <!-- Activities Section -->
   <section class="section">
     <div class="section-head reveal"><div><span class="idx">🎯</span><h2>🎯 أنشطة رياضية متاحة</h2><p>ماذا يمكنك أن تجرّب داخل الأندية؟</p></div></div>
     <div class="grid activities reveal" id="actGrid"></div>
   </section>
 
-  <!-- How it works -->
+  <!-- How It Works -->
   <section class="section">
     <div class="section-head reveal"><div><span class="idx">٠٤</span><h2>📝 طريقك إلى الملعب في 3 خطوات</h2><p>آلية واضحة من التقديم حتى صافرة البداية</p></div><a class="btn btn-ghost btn-sm" href="my-requests.html">تابع طلباتي ←</a></div>
     <div class="steps reveal">
@@ -169,72 +142,49 @@ footer code { background: rgba(255,255,255,0.12); padding: 1px 7px; border-radiu
 </main>
 <footer id="siteFooter"></footer><div id="toasts"></div>
 <script>
-// أندية افتراضية (مدمجة في الصفحة)
+// بيانات الأندية (مدمجة في الصفحة)
 const CLUBS = [
-  { id:"c-hilal", name:"نادي الهلال", country:"السعودية", flag:"🇸🇦", city:"الرياض", color1:"#0b2447", color2:"#1a6fd4", emoji:"🌙", stadium:"المملكة أرينا", capacity:26000, founded:1957,
-    desc:"زعيم الكرة السعودية وآسيا، مشهور بأكاديميته المتطورة وأسلوب اللعب الهجومي.",
-    activities:["تدريب كرة قدم جماعي","تدريب لياقة بدنية","ورشة تكتيكية","جولة في الملعب والمتحف","لقاء مع لاعبي الفريق الأول"] },
-  { id:"c-barca", name:"نادي برشلونة", country:"إسبانيا", flag:"🇪🇸", city:"برشلونة", color1:"#a50044", color2:"#004d98", emoji:"🔵", stadium:"الكامب نو", capacity:99354, founded:1899,
-    desc:"أحد أشهر أندية العالم ومدرسة لاماسيا العريقة.",
-    activities:["تدريب بأسلوب لاماسيا","تحليل أداء بالفيديو","جولة في الكامب نو","ورشة تغذية رياضية","مباراة ودية مع فئات النادي"] },
-  { id:"c-bayern", name:"بايرن ميونخ", country:"ألمانيا", flag:"🇩🇪", city:"ميونخ", color1:"#dc052d", color2:"#7a0019", emoji:"🔴", stadium:"أليانز أرينا", capacity:75000, founded:1900,
-    desc:"العملاق البافاري بانضباطه الألماني.",
-    activities:["تدريب بدني عالي الكثافة","ورشة تكتيكية","اختبارات قياس بدنية","جولة في أليانز أرينا"] },
-  { id:"c-ahly", name:"النادي الأهلي", country:"مصر", flag:"🇪🇬", city:"القاهرة", color1:"#c8102e", color2:"#7a0019", emoji:"🦅", stadium:"استاد القاهرة", capacity:75000, founded:1907,
-    desc:"نادي القرن الإفريقي وقلعة البطولات.",
-    activities:["تدريب كرة قدم جماعي","تدريب حراس المرمى","جولة في الجزيرة","محاضرة في الثقافة الرياضية"] },
-  { id:"c-ajax", name:"أياكس أمستردام", country:"هولندا", flag:"🇳🇱", city:"أمستردام", color1:"#d2122e", color2:"#ffffff", emoji:"⚪", stadium:"يوهان كرويف أرينا", capacity:55500, founded:1900,
-    desc:"مدرسة المواهب الأوروبية الأولى.",
-    activities:["تدريب المهارات الفردية","ورشة ذكاء تكتيكي","قياسات أداء","جولة في الأكاديمية"] },
-  { id:"c-sao", name:"نادي ساو باولو", country:"البرازيل", flag:"🇧🇷", city:"ساو باولو", color1:"#1493d1", color2:"#c8102e", emoji:"🇧🇷", stadium:"المورومبي", capacity:66795, founded:1930,
-    desc:"مهد السامبا ونجوم العالم.",
-    activities:["كرة شاطئية وشوارع","تدريب مهارات السامبا","ورشة إيقاع وحركة","جولة في المورومبي"] },
-  { id:"c-tokyo", name:"طوكيو فيردي", country:"اليابان", flag:"🇯🇵", city:"طوكيو", color1:"#0a7a3d", color2:"#0b2447", emoji:"🟢", stadium:"أجينوموتو", capacity:49970, founded:1969,
-    desc:"الانضباط الياباني والتقنية العالية.",
-    activities:["تدريب انضباطي صباحي","تحليل تقني بالذكاء الاصطناعي","ورشة ثقافة رياضية"] },
-  { id:"c-sydney", name:"نادي سيدني", country:"أستراليا", flag:"🇦🇺", city:"سيدني", color1:"#0ea5e9", color2:"#0b2447", emoji:"🌊", stadium:"أليانز سيدني", capacity:42500, founded:2004,
-    desc:"بوابة كرة القدم في أوقيانوسيا.",
-    activities:["تدريب لياقة هوائية","تدريب تكتيكي","جولة بحرية رياضية"] },
-  { id:"c-raja", name:"نادي الرجاء الرياضي", country:"المغرب", flag:"🇲🇦", city:"الدار البيضاء", color1:"#0a7a3d", color2:"#ffffff", emoji:"🦅", stadium:"دونور", capacity:67000, founded:1949,
-    desc:"النسور الخضر وجماهير الكورفا سود الشهيرة عالمياً.",
-    activities:["تدريب جماعي","جولة في مركب الوازيس","لقاء مع الجماهير"] },
-  { id:"c-galatasaray", name:"نادي غلطة سراي", country:"تركيا", flag:"🇹🇷", city:"إسطنبول", color1:"#ff0000", color2:"#ffffff", emoji:"🟡", stadium:"رامضان شكر", capacity:52000, founded:1905,
-    desc:"أحد أشهر أندية تركيا.",
-    activities:["تدريب كرة قدم جماعي","جولة في ملعب رامضان شكر","حفلات ونشاطات ترفيهية"] }
+  { id:"c-hilal", name:"نادي الهلال", country:"السعودية", flag:"🇸🇦", city:"الرياض", color1:"#0b2447", color2:"#1a6fd4", emoji:"🌙", stadium:"المملكة أرينا", capacity:26000, founded:1957, activities:["تدريب كرة قدم جماعي","تدريب لياقة بدنية","ورشة تكتيكية","جولة في الملعب والمتحف","لقاء مع لاعبي الفريق الأول"] },
+  { id:"c-barca", name:"نادي برشلونة", country:"إسبانيا", flag:"🇪🇸", city:"برشلونة", color1:"#a50044", color2:"#004d98", emoji:"🔵", stadium:"الكامب نو", capacity:99354, founded:1899, activities:["تدريب بأسلوب لاماسيا","تحليل أداء بالفيديو","جولة في الكامب نو","ورشة تغذية رياضية","مباراة ودية مع فئات النادي"] },
+  { id:"c-bayern", name:"بايرن ميونخ", country:"ألمانيا", flag:"🇩🇪", city:"ميونخ", color1:"#dc052d", color2:"#7a0019", emoji:"🔴", stadium:"أليانز أرينا", capacity:75000, founded:1900, activities:["تدريب بدني عالي الكثافة","ورشة تكتيكية","اختبارات قياس بدنية","جولة في أليانز أرينا"] },
+  { id:"c-ahly", name:"النادي الأهلي", country:"مصر", flag:"🇪🇬", city:"القاهرة", color1:"#c8102e", color2:"#7a0019", emoji:"🦅", stadium:"استاد القاهرة", capacity:75000, founded:1907, activities:["تدريب كرة قدم جماعي","تدريب حراس المرمى","جولة في الجزيرة","محاضرة في الثقافة الرياضية","مباراة ودية"] },
+  { id:"c-ajax", name:"أياكس أمستردام", country:"هولندا", flag:"🇳🇱", city:"أمستردام", color1:"#d2122e", color2:"#ffffff", emoji:"⚪", stadium:"يوهان كرويف أرينا", capacity:55500, founded:1900, activities:["تدريب المهارات الفردية","ورشة ذكاء تكتيكي","قياسات أداء","جولة في الأكاديمية","مباراة مصغرة"] },
+  { id:"c-sao", name:"نادي ساو باولو", country:"البرازيل", flag:"🇧🇷", city:"ساو باولو", color1:"#1493d1", color2:"#c8102e", emoji:"🇧🇷", stadium:"المورومبي", capacity:66795, founded:1930, activities:["كرة شاطئية وشوارع","تدريب مهارات السامبا","ورشة إيقاع وحركة","جولة في المورومبي","مباراة استعراضية"] },
+  { id:"c-tokyo", name:"طوكيو فيردي", country:"اليابان", flag:"🇯🇵", city:"طوكيو", color1:"#0a7a3d", color2:"#0b2447", emoji:"🟢", stadium:"أجينوموتو", capacity:49970, founded:1969, activities:["تدريب انضباطي صباحي","تحليل تقني بالذكاء الاصطناعي","ورشة ثقافة رياضية"] },
+  { id:"c-sydney", name:"نادي سيدني", country:"أستراليا", flag:"🇦🇺", city:"سيدني", color1:"#0ea5e9", color2:"#0b2447", emoji:"🌊", stadium:"أليانز سيدني", capacity:42500, founded:2004, activities:["تدريب لياقة هوائية","تدريب تكتيكي","جولة بحرية رياضية","ورشة إنجليزية رياضية","مباراة ودية"] },
+  { id:"c-raja", name:"نادي الرجاء الرياضي", country:"المغرب", flag:"🇲🇦", city:"الدار البيضاء", color1:"#0a7a3d", color2:"#ffffff", emoji:"🦅", stadium:"دونور", capacity:67000, founded:1949, activities:["تدريب جماعي","جولة في مركب الوازيس","لقاء مع الجماهير","ورشة تكتيكية","مباراة ودية"] },
+  { id:"c-galatasaray", name:"نادي غلطة سراي", country:"تركيا", flag:"🇹🇷", city:"إسطنبول", color1:"#ff0000", color2:"#ffffff", emoji:"🟡", stadium:"رامضان شكر", capacity:52000, founded:1905, activities:["تدريب كرة قدم جماعي","جولة في ملعب رامضان شكر","حفلات ونشاطات ترفيهية","جولات سياحية في إسطنبول","تجارب طعام تركي أصلي"] }
 ];
 
-// بناء صفحة الأندية
-if (document.getElementById("grid")) {
-  const sel = document.getElementById("fCountry");
-  const countries = [...new Set(CLUBS.map(c => c.country.trim()))];
-  countries.forEach(c => {
-    const o = document.createElement("option");
-    o.value = c;
-    o.textContent = c;
-    sel.appendChild(o);
-  });
+// بناء قائمة الدول
+const sel = document.getElementById("fCountry");
+const countries = [...new Set(CLUBS.map(c => c.country.trim()))];
+countries.forEach(c => {
+  const o = document.createElement("option");
+  o.value = c;
+  o.textContent = c;
+  sel.appendChild(o);
+});
 
-  function render() {
-    const co = sel.value.trim();
-    const q = document.getElementById("fSearch").value.trim();
-    let list = CLUBS.slice();
-    if(co) list = list.filter(c => c.country.trim() === co);
-    if(q) list = list.filter(c => c.name.includes(q) || c.city.includes(q));
-    document.getElementById("grid").innerHTML = list.map(c => `
-      <article class="card">
-        <div class="card-cover" style="background:linear-gradient(135deg,${c.color1},${c.color2})"><span class="flag">${c.flag}</span>${c.emoji}</div>
-        <div class="card-body"><h3>${c.name}</h3>
-          <div class="meta"><span class="tag">📍 ${c.country} — ${c.city}</span><span class="tag green">${c.activities.length} أنشطة</span></div>
-          <small style="color:var(--muted)">تأسس ${c.founded} • سعة الملعب ${Number(c.capacity).toLocaleString("ar")} متفرج</small>
-        </div>
-        <div class="card-actions"><a class="btn btn-primary btn-sm" href="club-details.html?id=${c.id}">عرض التفاصيل</a></div>
+// دالة عرض الأندية
+function render(){
+  const co = sel.value.trim();
+  const q = document.getElementById("fSearch").value.trim();
+  let list = CLUBS.slice();
+  if(co) list = list.filter(c => c.country.trim() === co);
+  if(q) list = list.filter(c => c.name.includes(q) || c.city.includes(q));
+  document.getElementById("grid").innerHTML = list.map(c => `
+    <article class="card">
+      <div class="card-cover" style="background:linear-gradient(135deg,${c.color1},${c.color2})"><span class="flag">${c.flag}</span>${c.emoji}</div>
+      <div class="card-body"><h3>${c.name}</h3>
+        <div class="meta"><span class="tag">📍 ${c.country} — ${c.city}</span><span class="tag green">${c.activities.length} أنشطة</span></div>
+        <small style="color:var(--muted)">تأسس ${c.founded} • سعة الملعب ${Number(c.capacity).toLocaleString("ar")} متفرج</small>
       </div>
+      <div class="card-actions"><a class="btn btn-primary btn-sm" href="club-details.html?id=${c.id}">عرض التفاصيل</a></div>
     </article>`).join("");
-    document.getElementById("empty").style.display = list.length ? "none" : "";
-  }
-  render();
+  document.getElementById("empty").style.display = list.length ? "none" : "";
 }
-
+render();
 </script>
 </body>
 </html>
